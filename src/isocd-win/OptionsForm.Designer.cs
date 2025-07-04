@@ -370,7 +370,7 @@
             this.imagePaddingComboBox.Name = "imagePaddingComboBox";
             this.imagePaddingComboBox.Size = new System.Drawing.Size(108, 24);
             this.imagePaddingComboBox.TabIndex = 31;
-            this.imagePaddingComboBox.Tag = "Gap from the inner edge of the disk. Recommended 1 minute or none.";
+            this.imagePaddingComboBox.Tag = "Gap from the inner edge of the disk. Recommended Sector x1, Sector x10 or none.";
             this.imagePaddingComboBox.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.textBox_HelpRequested);
             this.imagePaddingComboBox.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.Any_Characters_check);
             // 

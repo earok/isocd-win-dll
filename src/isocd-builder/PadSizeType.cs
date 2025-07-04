@@ -3,6 +3,8 @@
         None = 0,
         Cdr74 = 1,
         Cdr80 = 2,
-        Min1 = 3
+        Cdr90 = 3,
+        SectX1 = 4,
+        SectX10 = 5
     }
 }
