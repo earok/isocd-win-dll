@@ -54,17 +54,17 @@
             this.imagePaddingLabel = new System.Windows.Forms.Label();
             this.WinUAETestCheckBox = new System.Windows.Forms.CheckBox();
             this.cdfsGroupBox = new System.Windows.Forms.GroupBox();
+            this.dirCacheTextBox = new isocd_win.ValueBox();
+            this.dataCacheTextBox = new isocd_win.ValueBox();
+            this.fileLockTextBox = new isocd_win.ValueBox();
+            this.fileHandleTextBox = new isocd_win.ValueBox();
+            this.retriesTextBox = new isocd_win.ValueBox();
             this.isoGroupBox = new System.Windows.Forms.GroupBox();
             this.generalGroupBox = new System.Windows.Forms.GroupBox();
             this.winUAEBrowseButton = new System.Windows.Forms.Button();
             this.winUAEPathLabel = new System.Windows.Forms.Label();
             this.winUAEPathTextBox = new System.Windows.Forms.TextBox();
             this.HelpTextBox = new System.Windows.Forms.TextBox();
-            this.dirCacheTextBox = new isocd_win.ValueBox();
-            this.dataCacheTextBox = new isocd_win.ValueBox();
-            this.fileLockTextBox = new isocd_win.ValueBox();
-            this.fileHandleTextBox = new isocd_win.ValueBox();
-            this.retriesTextBox = new isocd_win.ValueBox();
             this.cdfsGroupBox.SuspendLayout();
             this.isoGroupBox.SuspendLayout();
             this.generalGroupBox.SuspendLayout();
@@ -124,6 +124,9 @@
             this.dataCacheLabel.Name = "dataCacheLabel";
             this.dataCacheLabel.Size = new System.Drawing.Size(82, 17);
             this.dataCacheLabel.TabIndex = 2;
+            this.dataCacheLabel.Tag = "CDFS allocates a read-ahead cache to improve performance. The size of this cache " +
+    "is specified in CD sectors (2K bytes each). The default size is 8 blocks, min.1 " +
+    "- max.127.";
             this.dataCacheLabel.Text = "Data Cache";
             // 
             // dataCacheSectorsLabel
@@ -240,7 +243,7 @@
             this.speedIndCheckBox.Name = "speedIndCheckBox";
             this.speedIndCheckBox.Size = new System.Drawing.Size(98, 21);
             this.speedIndCheckBox.TabIndex = 18;
-            this.speedIndCheckBox.Tag = "Speed independent.";
+            this.speedIndCheckBox.Tag = "Allow reading at higher speeds with newer drives.";
             this.speedIndCheckBox.Text = "Speed Ind.";
             this.speedIndCheckBox.UseVisualStyleBackColor = true;
             this.speedIndCheckBox.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.textBox_HelpRequested);
@@ -370,7 +373,8 @@
             this.imagePaddingComboBox.Name = "imagePaddingComboBox";
             this.imagePaddingComboBox.Size = new System.Drawing.Size(108, 24);
             this.imagePaddingComboBox.TabIndex = 31;
-            this.imagePaddingComboBox.Tag = "Gap from the inner edge of the disk. Recommended One minute, Ten minutes or None.";
+            this.imagePaddingComboBox.Tag = "Gap from the inner edge of the disk. Recommended One minute, Ten minutes or None." +
+    "";
             this.imagePaddingComboBox.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.textBox_HelpRequested);
             this.imagePaddingComboBox.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.Any_Characters_check);
             // 
@@ -422,6 +426,75 @@
             this.cdfsGroupBox.TabIndex = 1;
             this.cdfsGroupBox.TabStop = false;
             this.cdfsGroupBox.Text = "CDFS";
+            // 
+            // dirCacheTextBox
+            // 
+            this.dirCacheTextBox.Location = new System.Drawing.Point(120, 67);
+            this.dirCacheTextBox.Margin = new System.Windows.Forms.Padding(4);
+            this.dirCacheTextBox.MaxLength = 32;
+            this.dirCacheTextBox.MaxValue = 127;
+            this.dirCacheTextBox.MinValue = 2;
+            this.dirCacheTextBox.Name = "dirCacheTextBox";
+            this.dirCacheTextBox.Size = new System.Drawing.Size(140, 22);
+            this.dirCacheTextBox.TabIndex = 6;
+            this.dirCacheTextBox.Tag = resources.GetString("dirCacheTextBox.Tag");
+            this.dirCacheTextBox.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.textBox_HelpRequested);
+            // 
+            // dataCacheTextBox
+            // 
+            this.dataCacheTextBox.Location = new System.Drawing.Point(120, 22);
+            this.dataCacheTextBox.Margin = new System.Windows.Forms.Padding(4);
+            this.dataCacheTextBox.MaxLength = 32;
+            this.dataCacheTextBox.MaxValue = 127;
+            this.dataCacheTextBox.MinValue = 1;
+            this.dataCacheTextBox.Name = "dataCacheTextBox";
+            this.dataCacheTextBox.Size = new System.Drawing.Size(140, 22);
+            this.dataCacheTextBox.TabIndex = 3;
+            this.dataCacheTextBox.Tag = "CDFS allocates a read-ahead cache to improve performance. The size of this cache " +
+    "is specified in CD sectors (2K bytes each). The default size is 8 blocks, min.1 " +
+    "- max.127.";
+            this.dataCacheTextBox.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.textBox_HelpRequested);
+            // 
+            // fileLockTextBox
+            // 
+            this.fileLockTextBox.Location = new System.Drawing.Point(120, 113);
+            this.fileLockTextBox.Margin = new System.Windows.Forms.Padding(4);
+            this.fileLockTextBox.MaxLength = 32;
+            this.fileLockTextBox.MaxValue = 9999;
+            this.fileLockTextBox.MinValue = 1;
+            this.fileLockTextBox.Name = "fileLockTextBox";
+            this.fileLockTextBox.Size = new System.Drawing.Size(140, 22);
+            this.fileLockTextBox.TabIndex = 9;
+            this.fileLockTextBox.Tag = resources.GetString("fileLockTextBox.Tag");
+            this.fileLockTextBox.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.textBox_HelpRequested);
+            // 
+            // fileHandleTextBox
+            // 
+            this.fileHandleTextBox.Location = new System.Drawing.Point(120, 158);
+            this.fileHandleTextBox.Margin = new System.Windows.Forms.Padding(4);
+            this.fileHandleTextBox.MaxLength = 32;
+            this.fileHandleTextBox.MaxValue = 9999;
+            this.fileHandleTextBox.MinValue = 1;
+            this.fileHandleTextBox.Name = "fileHandleTextBox";
+            this.fileHandleTextBox.Size = new System.Drawing.Size(140, 22);
+            this.fileHandleTextBox.TabIndex = 12;
+            this.fileHandleTextBox.Tag = "As with Filelocks, CDFS pre-allocates a pool of Filehandle structures. The size o" +
+    "f the pool is specified as the number of Filehandles to pre-allocate. The defaul" +
+    "t value is 16, min.1 - max.9999.";
+            this.fileHandleTextBox.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.textBox_HelpRequested);
+            // 
+            // retriesTextBox
+            // 
+            this.retriesTextBox.Location = new System.Drawing.Point(120, 204);
+            this.retriesTextBox.Margin = new System.Windows.Forms.Padding(4);
+            this.retriesTextBox.MaxLength = 32;
+            this.retriesTextBox.MaxValue = 9999;
+            this.retriesTextBox.MinValue = 0;
+            this.retriesTextBox.Name = "retriesTextBox";
+            this.retriesTextBox.Size = new System.Drawing.Size(140, 22);
+            this.retriesTextBox.TabIndex = 15;
+            this.retriesTextBox.Tag = "The default value is 32, min.0 - max.9999";
+            this.retriesTextBox.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.textBox_HelpRequested);
             // 
             // isoGroupBox
             // 
@@ -495,84 +568,17 @@
             // 
             this.HelpTextBox.BackColor = System.Drawing.SystemColors.Control;
             this.HelpTextBox.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.HelpTextBox.Enabled = false;
+            this.HelpTextBox.Cursor = System.Windows.Forms.Cursors.Default;
             this.HelpTextBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
+            this.HelpTextBox.ForeColor = System.Drawing.SystemColors.HotTrack;
             this.HelpTextBox.Location = new System.Drawing.Point(16, 294);
             this.HelpTextBox.Margin = new System.Windows.Forms.Padding(2);
             this.HelpTextBox.Multiline = true;
             this.HelpTextBox.Name = "HelpTextBox";
+            this.HelpTextBox.ReadOnly = true;
             this.HelpTextBox.Size = new System.Drawing.Size(419, 99);
             this.HelpTextBox.TabIndex = 41;
             this.HelpTextBox.TabStop = false;
-            // 
-            // dirCacheTextBox
-            // 
-            this.dirCacheTextBox.Location = new System.Drawing.Point(120, 67);
-            this.dirCacheTextBox.Margin = new System.Windows.Forms.Padding(4);
-            this.dirCacheTextBox.MaxLength = 32;
-            this.dirCacheTextBox.MaxValue = 127;
-            this.dirCacheTextBox.MinValue = 2;
-            this.dirCacheTextBox.Name = "dirCacheTextBox";
-            this.dirCacheTextBox.Size = new System.Drawing.Size(140, 22);
-            this.dirCacheTextBox.TabIndex = 6;
-            this.dirCacheTextBox.Tag = resources.GetString("dirCacheTextBox.Tag");
-            this.dirCacheTextBox.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.textBox_HelpRequested);
-            // 
-            // dataCacheTextBox
-            // 
-            this.dataCacheTextBox.Location = new System.Drawing.Point(120, 22);
-            this.dataCacheTextBox.Margin = new System.Windows.Forms.Padding(4);
-            this.dataCacheTextBox.MaxLength = 32;
-            this.dataCacheTextBox.MaxValue = 127;
-            this.dataCacheTextBox.MinValue = 1;
-            this.dataCacheTextBox.Name = "dataCacheTextBox";
-            this.dataCacheTextBox.Size = new System.Drawing.Size(140, 22);
-            this.dataCacheTextBox.TabIndex = 3;
-            this.dataCacheTextBox.Tag = "CDFS allocates a read-ahead cache to improve performance. The size of this cache " +
-    "is specified in CD sectors (2K bytes each). The default size is 8 blocks, min.1 " +
-    "- max.127.";
-            this.dataCacheTextBox.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.textBox_HelpRequested);
-            // 
-            // fileLockTextBox
-            // 
-            this.fileLockTextBox.Location = new System.Drawing.Point(120, 113);
-            this.fileLockTextBox.Margin = new System.Windows.Forms.Padding(4);
-            this.fileLockTextBox.MaxLength = 32;
-            this.fileLockTextBox.MaxValue = 9999;
-            this.fileLockTextBox.MinValue = 1;
-            this.fileLockTextBox.Name = "fileLockTextBox";
-            this.fileLockTextBox.Size = new System.Drawing.Size(140, 22);
-            this.fileLockTextBox.TabIndex = 9;
-            this.fileLockTextBox.Tag = resources.GetString("fileLockTextBox.Tag");
-            this.fileLockTextBox.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.textBox_HelpRequested);
-            // 
-            // fileHandleTextBox
-            // 
-            this.fileHandleTextBox.Location = new System.Drawing.Point(120, 158);
-            this.fileHandleTextBox.Margin = new System.Windows.Forms.Padding(4);
-            this.fileHandleTextBox.MaxLength = 32;
-            this.fileHandleTextBox.MaxValue = 9999;
-            this.fileHandleTextBox.MinValue = 1;
-            this.fileHandleTextBox.Name = "fileHandleTextBox";
-            this.fileHandleTextBox.Size = new System.Drawing.Size(140, 22);
-            this.fileHandleTextBox.TabIndex = 12;
-            this.fileHandleTextBox.Tag = "As with Filelocks, CDFS pre-allocates a pool of Filehandle structures. The size o" +
-    "f the pool is specified as the number of Filehandles to pre-allocate. The defaul" +
-    "t value is 16, min.1 - max.9999.";
-            this.fileHandleTextBox.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.textBox_HelpRequested);
-            // 
-            // retriesTextBox
-            // 
-            this.retriesTextBox.Location = new System.Drawing.Point(120, 204);
-            this.retriesTextBox.Margin = new System.Windows.Forms.Padding(4);
-            this.retriesTextBox.MaxLength = 32;
-            this.retriesTextBox.MaxValue = 9999;
-            this.retriesTextBox.MinValue = 0;
-            this.retriesTextBox.Name = "retriesTextBox";
-            this.retriesTextBox.Size = new System.Drawing.Size(140, 22);
-            this.retriesTextBox.TabIndex = 15;
-            this.retriesTextBox.Tag = "The default value is 32, min.0 - max.9999";
-            this.retriesTextBox.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.textBox_HelpRequested);
             // 
             // optionsForm
             // 

@@ -777,17 +777,18 @@ namespace isocd_builder {
 
             if (options.PadSize != PadSizeType.None && options.PadSize != PadSizeType.Min1 && options.PadSize != PadSizeType.Min10)
             {
-                paddingSectors = maxSectors - totalSectors - 150;
+                paddingSectors = maxSectors - totalSectors - 200;
+                if (paddingSectors < 0) paddingSectors = 0;
                 totalSectors = maxSectors;
             }
             else if (options.PadSize == PadSizeType.Min1)
             {
-                paddingSectors = 4500 - 150;
+                paddingSectors = 4500 - 200;
                 totalSectors = maxSectors;
             }
             else if (options.PadSize == PadSizeType.Min10)
             {
-                paddingSectors = 45000 - 150;
+                paddingSectors = 45000 - 200;
                 totalSectors = maxSectors;
             }
 
