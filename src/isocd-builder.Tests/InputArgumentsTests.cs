@@ -16,7 +16,7 @@ namespace isocd_builder.Tests {
             var fullArguments = new InputArguments(args.ToArray());
             var parsedFullOptions = fullArguments.ToObject<Options>();
 
-            Assert.AreEqual(parsedFullOptions.GetObjectAsJson(), instantiatedFullOptions.GetObjectAsJson());
+            Assert.That(parsedFullOptions.GetObjectAsJson(), Is.EqualTo(instantiatedFullOptions.GetObjectAsJson()));
         }
 
         [Test]
@@ -27,7 +27,7 @@ namespace isocd_builder.Tests {
             var fullArguments = new InputArguments(args.ToArray());
             var parsedFullOptions = fullArguments.ToObject<Options>();
 
-            Assert.AreEqual(parsedFullOptions.GetObjectAsJson(), instantiatedFullOptions.GetObjectAsJson());
+            Assert.That(parsedFullOptions.GetObjectAsJson(), Is.EqualTo(instantiatedFullOptions.GetObjectAsJson()));
         }
 
         [Test]
@@ -38,7 +38,7 @@ namespace isocd_builder.Tests {
             var fullArguments = new InputArguments(args.ToArray());
             var parsedFullOptions = fullArguments.ToObject<Options>();
 
-            Assert.AreEqual(parsedFullOptions.GetObjectAsJson(), instantiatedFullOptions.GetObjectAsJson());
+            Assert.That(parsedFullOptions.GetObjectAsJson(), Is.EqualTo(instantiatedFullOptions.GetObjectAsJson()));
         }
 
         [Test]
@@ -49,7 +49,7 @@ namespace isocd_builder.Tests {
             var fullArguments = new InputArguments(args.ToArray());
             var parsedFullOptions = fullArguments.ToObject<Options>();
 
-            Assert.AreEqual(parsedFullOptions.GetObjectAsJson(), instantiatedFullOptions.GetObjectAsJson());
+            Assert.That(parsedFullOptions.GetObjectAsJson(), Is.EqualTo(instantiatedFullOptions.GetObjectAsJson()));
         }
 
         [Test]
@@ -60,7 +60,7 @@ namespace isocd_builder.Tests {
             var fullArguments = new InputArguments(args.ToArray());
             var parsedFullOptions = fullArguments.ToObject<Options>();
 
-            Assert.AreEqual(parsedFullOptions.GetObjectAsJson(), instantiatedFullOptions.GetObjectAsJson());
+            Assert.That(parsedFullOptions.GetObjectAsJson(), Is.EqualTo(instantiatedFullOptions.GetObjectAsJson()));
         }
 
         [Test]
@@ -71,7 +71,7 @@ namespace isocd_builder.Tests {
             var fullArguments = new InputArguments(args.ToArray());
             var parsedFullOptions = fullArguments.ToObject<Options>();
 
-            Assert.AreEqual(parsedFullOptions.GetObjectAsJson(), instantiatedFullOptions.GetObjectAsJson());
+            Assert.That(parsedFullOptions.GetObjectAsJson(), Is.EqualTo(instantiatedFullOptions.GetObjectAsJson()));
         }
 
         [Test]
@@ -82,7 +82,7 @@ namespace isocd_builder.Tests {
             var fullArguments = new InputArguments(args.ToArray());
             var parsedFullOptions = fullArguments.ToObject<Options>();
 
-            Assert.AreEqual(parsedFullOptions.GetObjectAsJson(), instantiatedFullOptions.GetObjectAsJson());
+            Assert.That(parsedFullOptions.GetObjectAsJson(), Is.EqualTo(instantiatedFullOptions.GetObjectAsJson()));
         }
 
         [Test]
@@ -93,7 +93,7 @@ namespace isocd_builder.Tests {
             var fullArguments = new InputArguments(args.ToArray());
             var parsedFullOptions = fullArguments.ToObject<Options>();
 
-            Assert.AreEqual(parsedFullOptions.GetObjectAsJson(), instantiatedFullOptions.GetObjectAsJson());
+            Assert.That(parsedFullOptions.GetObjectAsJson(), Is.EqualTo(instantiatedFullOptions.GetObjectAsJson()));
         }
 
         [Test]
@@ -110,8 +110,8 @@ namespace isocd_builder.Tests {
                 var parsedFullOptions = fullArguments.ToObject<Options>();
             }
             catch(ArgumentException ex) {
-                Assert.IsTrue(ex.Message.StartsWith(isocd_builder_constants.ARG_EXCEPTION_UNRECOGNISED_ARGUMENT));
-                Assert.AreEqual("ua", ex.ParamName);
+                Assert.That(ex.Message.StartsWith(isocd_builder_constants.ARG_EXCEPTION_UNRECOGNISED_ARGUMENT));
+                Assert.That("ua", Is.EqualTo(ex.ParamName));
                 return;
             }
 
@@ -132,8 +132,8 @@ namespace isocd_builder.Tests {
                 var parsedFullOptions = fullArguments.ToObject<Options>();
             }
             catch(ArgumentException ex) {
-                Assert.IsTrue(ex.Message.StartsWith(isocd_builder_constants.ARG_EXCEPTION_UNRECOGNISED_ARGUMENT));
-                Assert.AreEqual("UA", ex.ParamName);
+                Assert.That(ex.Message.StartsWith(isocd_builder_constants.ARG_EXCEPTION_UNRECOGNISED_ARGUMENT));
+                Assert.That("UA", Is.EqualTo(ex.ParamName));
                 return;
             }
 
@@ -154,8 +154,8 @@ namespace isocd_builder.Tests {
                 var parsedFullOptions = fullArguments.ToObject<Options>();
             }
             catch(ArgumentException ex) {
-                Assert.IsTrue(ex.Message.StartsWith(isocd_builder_constants.ARG_EXCEPTION_UNRECOGNISED_ARGUMENT));
-                Assert.AreEqual("UnrecognisedArg", ex.ParamName);
+                Assert.That(ex.Message.StartsWith(isocd_builder_constants.ARG_EXCEPTION_UNRECOGNISED_ARGUMENT));
+                Assert.That("UnrecognisedArg", Is.EqualTo(ex.ParamName));
                 return;
             }
 
@@ -176,8 +176,8 @@ namespace isocd_builder.Tests {
                 var parsedFullOptions = fullArguments.ToObject<Options>();
             }
             catch(ArgumentException ex) {
-                Assert.IsTrue(ex.Message.StartsWith(isocd_builder_constants.ARG_EXCEPTION_UNRECOGNISED_ARGUMENT));
-                Assert.AreEqual("UNRECOGNISEDARG", ex.ParamName);
+                Assert.That(ex.Message.StartsWith(isocd_builder_constants.ARG_EXCEPTION_UNRECOGNISED_ARGUMENT));
+                Assert.That("UNRECOGNISEDARG", Is.EqualTo(ex.ParamName));
                 return;
             }
 
@@ -197,8 +197,8 @@ namespace isocd_builder.Tests {
                 var parsedFullOptions = fullArguments.ToObject<Options>();
             }
             catch(ArgumentException ex) {
-                Assert.IsTrue(ex.Message.StartsWith(isocd_builder_constants.ARG_EXCEPTION_ARGUMENT_MUST_SPECIFY_STRING_VALUE));
-                Assert.AreEqual("InputFolder", ex.ParamName);
+                Assert.That(ex.Message.StartsWith(isocd_builder_constants.ARG_EXCEPTION_ARGUMENT_MUST_SPECIFY_STRING_VALUE));
+                Assert.That("InputFolder", Is.EqualTo(ex.ParamName));
                 return;
             }
 
@@ -218,8 +218,8 @@ namespace isocd_builder.Tests {
                 var parsedFullOptions = fullArguments.ToObject<Options>();
             }
             catch(ArgumentException ex) {
-                Assert.IsTrue(ex.Message.StartsWith(isocd_builder_constants.ARG_EXCEPTION_ARGUMENT_MUST_SPECIFY_STRING_VALUE));
-                Assert.AreEqual("InputFolder", ex.ParamName);
+                Assert.That(ex.Message.StartsWith(isocd_builder_constants.ARG_EXCEPTION_ARGUMENT_MUST_SPECIFY_STRING_VALUE));
+                Assert.That("InputFolder", Is.EqualTo(ex.ParamName));
                 return;
             }
 
@@ -239,8 +239,8 @@ namespace isocd_builder.Tests {
                 var parsedFullOptions = fullArguments.ToObject<Options>();
             }
             catch(ArgumentException ex) {
-                Assert.IsTrue(ex.Message.StartsWith(isocd_builder_constants.ARG_EXCEPTION_ARGUMENT_MUST_SPECIFY_INTEGER_VALUE));
-                Assert.AreEqual("DataCache", ex.ParamName);
+                Assert.That(ex.Message.StartsWith(isocd_builder_constants.ARG_EXCEPTION_ARGUMENT_MUST_SPECIFY_INTEGER_VALUE));
+                Assert.That("DataCache", Is.EqualTo(ex.ParamName));
                 return;
             }
 
@@ -260,8 +260,8 @@ namespace isocd_builder.Tests {
                 var parsedFullOptions = fullArguments.ToObject<Options>();
             }
             catch(ArgumentException ex) {
-                Assert.IsTrue(ex.Message.StartsWith(isocd_builder_constants.ARG_EXCEPTION_ARGUMENT_MUST_SPECIFY_INTEGER_VALUE));
-                Assert.AreEqual("DataCache", ex.ParamName);
+                Assert.That(ex.Message.StartsWith(isocd_builder_constants.ARG_EXCEPTION_ARGUMENT_MUST_SPECIFY_INTEGER_VALUE));
+                Assert.That("DataCache", Is.EqualTo(ex.ParamName));
                 return;
             }
 
@@ -281,8 +281,8 @@ namespace isocd_builder.Tests {
                 var parsedFullOptions = fullArguments.ToObject<Options>();
             }
             catch(ArgumentException ex) {
-                Assert.IsTrue(ex.Message.StartsWith(isocd_builder_constants.ARG_EXCEPTION_VALUE_PROVIDED_NOT_VALID_INTEGER));
-                Assert.AreEqual("DataCache", ex.ParamName);
+                Assert.That(ex.Message.StartsWith(isocd_builder_constants.ARG_EXCEPTION_VALUE_PROVIDED_NOT_VALID_INTEGER));
+                Assert.That("DataCache", Is.EqualTo(ex.ParamName));
                 return;
             }
 
@@ -302,8 +302,8 @@ namespace isocd_builder.Tests {
                 var parsedFullOptions = fullArguments.ToObject<Options>();
             }
             catch(ArgumentException ex) {
-                Assert.IsTrue(ex.Message.StartsWith(isocd_builder_constants.ARG_EXCEPTION_VALUE_PROVIDED_NOT_VALID_INTEGER));
-                Assert.AreEqual("DataCache", ex.ParamName);
+                Assert.That(ex.Message.StartsWith(isocd_builder_constants.ARG_EXCEPTION_VALUE_PROVIDED_NOT_VALID_INTEGER));
+                Assert.That("DataCache", Is.EqualTo(ex.ParamName));
                 return;
             }
 
@@ -323,8 +323,8 @@ namespace isocd_builder.Tests {
                 var parsedFullOptions = fullArguments.ToObject<Options>();
             }
             catch(ArgumentException ex) {
-                Assert.IsTrue(ex.Message.StartsWith(isocd_builder_constants.ARG_EXCEPTION_ARGUMENT_MUST_SPECIFY_VALID_VALUE));
-                Assert.AreEqual("PadSize", ex.ParamName);
+                Assert.That(ex.Message.StartsWith(isocd_builder_constants.ARG_EXCEPTION_ARGUMENT_MUST_SPECIFY_VALID_VALUE));
+                Assert.That("PadSize", Is.EqualTo(ex.ParamName));
                 return;
             }
 
@@ -344,8 +344,8 @@ namespace isocd_builder.Tests {
                 var parsedFullOptions = fullArguments.ToObject<Options>();
             }
             catch(ArgumentException ex) {
-                Assert.IsTrue(ex.Message.StartsWith(isocd_builder_constants.ARG_EXCEPTION_ARGUMENT_MUST_SPECIFY_VALID_VALUE));
-                Assert.AreEqual("PadSize", ex.ParamName);
+                Assert.That(ex.Message.StartsWith(isocd_builder_constants.ARG_EXCEPTION_ARGUMENT_MUST_SPECIFY_VALID_VALUE));
+                Assert.That("PadSize", Is.EqualTo(ex.ParamName));
                 return;
             }
 
@@ -365,8 +365,8 @@ namespace isocd_builder.Tests {
                 var parsedFullOptions = fullArguments.ToObject<Options>();
             }
             catch(ArgumentException ex) {
-                Assert.IsTrue(ex.Message.StartsWith(isocd_builder_constants.ARG_EXCEPTION_VALUE_PROVIDED_NOT_RECOGNISED));
-                Assert.AreEqual("PadSize", ex.ParamName);
+                Assert.That(ex.Message.StartsWith(isocd_builder_constants.ARG_EXCEPTION_VALUE_PROVIDED_NOT_RECOGNISED));
+                Assert.That("PadSize", Is.EqualTo(ex.ParamName));
                 return;
             }
 

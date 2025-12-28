@@ -85,6 +85,9 @@ namespace isocd_builder {
             }
         }
 
+        [CmdLineOption(120, "pr", "Priority List File Path", "<path>", MinLength = 0, IsRequired = false)]
+        public string PriorityListFilePath { get; set; }
+
         /// <summary>
         /// This sets each property to the default value specified in its CmdLineOptionAttribute if present.
         /// </summary>

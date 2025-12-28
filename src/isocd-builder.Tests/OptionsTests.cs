@@ -13,9 +13,9 @@ namespace isocd_builder.Tests {
 
             var validationResult = instantiatedFullOptions.ValidationResult();
 
-            Assert.IsTrue(validationResult.Success);
-            Assert.IsTrue(validationResult.NumErrors == 0);
-            Assert.AreEqual(validationResult.Message, isocd_builder_constants.VALIDATION_SUCCESSFUL_MESSAGE);
+            Assert.That(validationResult.Success);
+            Assert.That(validationResult.NumErrors == 0);
+            Assert.That(validationResult.Message, Is.EqualTo(isocd_builder_constants.VALIDATION_SUCCESSFUL_MESSAGE));
         }
 
         [Test]
@@ -26,9 +26,9 @@ namespace isocd_builder.Tests {
             instantiatedFullOptions.InputFolder = null;
             var validationResult = instantiatedFullOptions.ValidationResult();
 
-            Assert.IsTrue(validationResult.Success == false);
-            Assert.IsTrue(validationResult.NumErrors == 1);
-            Assert.IsTrue(validationResult.Message != null);
+            Assert.That(validationResult.Success == false);
+            Assert.That(validationResult.NumErrors == 1);
+            Assert.That(validationResult.Message != null);
         }
 
         [Test]
@@ -39,9 +39,9 @@ namespace isocd_builder.Tests {
             instantiatedFullOptions.InputFolder = " \t\r\n";
             var validationResult = instantiatedFullOptions.ValidationResult();
 
-            Assert.IsTrue(validationResult.Success == false);
-            Assert.IsTrue(validationResult.NumErrors == 1);
-            Assert.IsTrue(validationResult.Message != null);
+            Assert.That(validationResult.Success == false);
+            Assert.That(validationResult.NumErrors == 1);
+            Assert.That(validationResult.Message != null);
         }
 
         [Test]
@@ -52,9 +52,9 @@ namespace isocd_builder.Tests {
             instantiatedFullOptions.TrademarkFile = null;
             var validationResult = instantiatedFullOptions.ValidationResult();
 
-            Assert.IsTrue(validationResult.Success);
-            Assert.IsTrue(validationResult.NumErrors == 0);
-            Assert.AreEqual(validationResult.Message, isocd_builder_constants.VALIDATION_SUCCESSFUL_MESSAGE);
+            Assert.That(validationResult.Success);
+            Assert.That(validationResult.NumErrors == 0);
+            Assert.That(validationResult.Message, Is.EqualTo(isocd_builder_constants.VALIDATION_SUCCESSFUL_MESSAGE));
         }
 
         [Test]
@@ -65,9 +65,9 @@ namespace isocd_builder.Tests {
             instantiatedFullOptions.InputFolder = "";
             var validationResult = instantiatedFullOptions.ValidationResult();
 
-            Assert.IsTrue(validationResult.Success == false);
-            Assert.IsTrue(validationResult.NumErrors == 1);
-            Assert.IsTrue(validationResult.Message != null);
+            Assert.That(validationResult.Success == false);
+            Assert.That(validationResult.NumErrors == 1);
+            Assert.That(validationResult.Message != null);
         }
 
         [Test]
@@ -78,9 +78,9 @@ namespace isocd_builder.Tests {
             instantiatedFullOptions.VolumeId = string.Empty.PadLeft(33, ' ');
             var validationResult = instantiatedFullOptions.ValidationResult();
 
-            Assert.IsTrue(validationResult.Success == false);
-            Assert.IsTrue(validationResult.NumErrors == 1);
-            Assert.IsTrue(validationResult.Message != null);
+            Assert.That(validationResult.Success == false);
+            Assert.That(validationResult.NumErrors == 1);
+            Assert.That(validationResult.Message != null);
         }
 
         [Test]
@@ -91,9 +91,9 @@ namespace isocd_builder.Tests {
             instantiatedFullOptions.DataCache = 0;
             var validationResult = instantiatedFullOptions.ValidationResult();
 
-            Assert.IsTrue(validationResult.Success == false);
-            Assert.IsTrue(validationResult.NumErrors == 1);
-            Assert.IsTrue(validationResult.Message != null);
+            Assert.That(validationResult.Success == false);
+            Assert.That(validationResult.NumErrors == 1);
+            Assert.That(validationResult.Message != null);
         }
 
         [Test]
@@ -104,9 +104,9 @@ namespace isocd_builder.Tests {
             instantiatedFullOptions.DataCache = 128;
             var validationResult = instantiatedFullOptions.ValidationResult();
 
-            Assert.IsTrue(validationResult.Success == false);
-            Assert.IsTrue(validationResult.NumErrors == 1);
-            Assert.IsTrue(validationResult.Message != null);
+            Assert.That(validationResult.Success == false);
+            Assert.That(validationResult.NumErrors == 1);
+            Assert.That(validationResult.Message != null);
         }
 
         [Test]
@@ -120,9 +120,9 @@ namespace isocd_builder.Tests {
             instantiatedFullOptions.DataCache = 128;
             var validationResult = instantiatedFullOptions.ValidationResult();
 
-            Assert.IsTrue(validationResult.Success == false);
-            Assert.IsTrue(validationResult.NumErrors == 2);
-            Assert.IsTrue(validationResult.Message != null);
+            Assert.That(validationResult.Success == false);
+            Assert.That(validationResult.NumErrors == 2);
+            Assert.That(validationResult.Message != null);
         }
     }
 }

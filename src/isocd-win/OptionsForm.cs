@@ -44,6 +44,7 @@ namespace isocd_win {
             playSoundsCheckBox.Checked = _options.PlaySounds;
             WinUAETestCheckBox.Checked = _options.WinUAETest;
             winUAEPathTextBox.Text = _options.WinUAEPath;
+            priorityFilePathTextBox.Text = _options.PriorityListFilePath;
         }
 
         void OkButton_Click(object sender, EventArgs e) {
@@ -70,6 +71,7 @@ namespace isocd_win {
             newOptions.PlaySounds = playSoundsCheckBox.Checked;
             newOptions.WinUAETest = WinUAETestCheckBox.Checked;
             newOptions.WinUAEPath = winUAEPathTextBox.Text;
+            newOptions.PriorityListFilePath = priorityFilePathTextBox.Text;
 
             if(!newOptions.IsValid()) {
                 MessageBox.Show(newOptions.ValidationResult().Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
@@ -102,6 +104,19 @@ namespace isocd_win {
             }) {
                 if(fdlg.ShowDialog() == DialogResult.OK) {
                     winUAEPathTextBox.Text = fdlg.FileName;
+                }
+            }
+        }
+
+        private void PriorityFileBrowseButton_Click(object sender, EventArgs e)
+        {
+            using (var fdlg = new OpenFolderDialog())
+            {
+                fdlg.InitialFolder = Directory.GetCurrentDirectory();
+
+                if (fdlg.ShowDialog(this) == DialogResult.OK)
+                {
+                    priorityFilePathTextBox.Text = fdlg.Folder;
                 }
             }
         }
@@ -144,6 +159,16 @@ namespace isocd_win {
             e.Handled = true;
 
             base.OnKeyPress(e);
+        }
+
+        private void winUAEPathTextBox_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void priorityFilePathTextBox_TextChanged(object sender, EventArgs e)
+        {
+
         }
     }
 }

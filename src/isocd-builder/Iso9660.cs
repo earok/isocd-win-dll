@@ -15,11 +15,13 @@ using _fileSystem = System.IO;
 
 #endif
 
-namespace isocd_builder {
+namespace isocd_builder
+{
     /// <summary>
     /// This class provides the core functionality to produce an ISO 9660 file system ISO image compatible with AmigaDOS.
     /// </summary>
-    public class Iso9660 {
+    public class Iso9660
+    {
 
 #if !ACTUAL_RELEASE
         readonly IFileSystem _fileSystem;
@@ -39,16 +41,20 @@ namespace isocd_builder {
 #if !ACTUAL_RELEASE
 
         // This is our standard constructor in production which uses the the normal System.IO namespace
-        public Iso9660(Options options) : this(new FileSystem(), options) {
+        public Iso9660(Options options) : this(new FileSystem(), options)
+        {
         }
 
         // This is our testing constructor which uses the System.IO.Abstractions namespace to allow us to use a mock file system for unit testing
-        public Iso9660(IFileSystem fileSystem, Options options) {
-            if(fileSystem == null) {
+        public Iso9660(IFileSystem fileSystem, Options options)
+        {
+            if (fileSystem == null)
+            {
                 throw new NullReferenceException("The fileSystem object cannot be null.");
             }
 
-            if(options == null) {
+            if (options == null)
+            {
                 throw new NullReferenceException("The options object cannot be null.");
             }
 
@@ -59,7 +65,8 @@ namespace isocd_builder {
 
 #else
 
-        public Iso9660(Options options) {
+        public Iso9660(Options options)
+        {
             this.options = options;
         }
 
@@ -68,14 +75,18 @@ namespace isocd_builder {
         /// <summary>
         /// Recursively scans a folder structure to find all files and directories present and generate appropriate records for the ISO 9660 filesystem.
         /// </summary>
-        void TreeScan(DirectoryQueueEntry parentDir, ushort parentDirectoryNumber, BuildIsoWorker worker) {
-            while(parentDir != null) {
+        void TreeScan(DirectoryQueueEntry parentDir, ushort parentDirectoryNumber, BuildIsoWorker worker)
+        {
+            var _parentDir = parentDir;
+
+            while (parentDir != null)
+            {
                 worker.Token.ThrowIfCancellationRequested();
 
                 var entries = new List<Iso9660Entry>();
 
 #if !ACTUAL_RELEASE
-                var dirInfo = _fileSystem.DirectoryInfo.FromDirectoryName(parentDir.Path);
+                var dirInfo = _fileSystem.DirectoryInfo.New(parentDir.Path);
 #else
                 var dirInfo = new DirectoryInfo(parentDir.Path);
 #endif
@@ -83,8 +94,10 @@ namespace isocd_builder {
                 entries.AddRange(
                     dirInfo.EnumerateFileSystemInfos()
                     .Select(
-                        f => {
-                            var entry = new Iso9660Entry {
+                        f =>
+                        {
+                            var entry = new Iso9660Entry
+                            {
                                 ParentDirectoryIndex = parentDir.Index,
                                 ParentDirectoryNumber = parentDirectoryNumber,
                                 Path = f.FullName,
@@ -92,11 +105,26 @@ namespace isocd_builder {
                                 DateStamp = f.LastWriteTimeUtc
                             };
 
-                            if (f is FileInfoBase) {
+                            string _rootSubdirectory = f.FullName.Replace(_parentDir.Path, "");
+
+                            if (_rootSubdirectory.Count() > 255)
+                            {
+                                throw new InvalidOperationException(isocd_builder_constants.ERROR_MESSAGE_PATH_LENGTH_TO_LONG);
+                            }
+
+                            if (f is FileInfoBase)
+                            {
                                 entry.Type = EntryType.File;
                                 entry.Size = ((FileInfoBase)f).Length;
                             }
-                            else {
+                            else
+                            {
+
+                                if (_rootSubdirectory.Count(testChar => testChar == '\\') > 8)
+                                {
+                                    throw new InvalidOperationException(isocd_builder_constants.ERROR_MESSAGE_SUBDIRECTORY_LIMIT_EXCEEDED);
+                                }
+
                                 entry.Type = EntryType.Directory;
                                 entry.DirectoryNumber = ++directoryNumber;
 
@@ -104,7 +132,8 @@ namespace isocd_builder {
                                 entry.PathTableRecordSize = isocd_builder_constants.MINIMUM_PATH_TABLE_RECORD_SIZE + (entry.Identifier.Length - 1);
 
                                 // Padding is only required if the entry identifier length is odd
-                                if ((entry.Identifier.Length & 1) == 1) {
+                                if ((entry.Identifier.Length & 1) == 1)
+                                {
                                     entry.PathTableRecordSize++;
                                 }
                             }
@@ -113,7 +142,8 @@ namespace isocd_builder {
                             entry.DirectoryRecordSize = isocd_builder_constants.MINIMUM_DIR_RECORD_SIZE + (entry.Identifier.Length - 1);
 
                             // Padding is only required if the entry identifier length is even
-                            if ((entry.Identifier.Length & 1) == 0) {
+                            if ((entry.Identifier.Length & 1) == 0)
+                            {
                                 entry.DirectoryRecordSize++;
                             }
 
@@ -128,15 +158,18 @@ namespace isocd_builder {
                 // ISOCD uses a case insensitive sort for the entries based on path
                 entries.Sort((x, y) => string.Compare(x.Path, y.Path, StringComparison.OrdinalIgnoreCase));
 
-                foreach (var entry in entries) {
+                foreach (var entry in entries)
+                {
                     // Now that the entries are sorted, set their correct indexes
                     entry.Index = indexCounter++;
                 }
 
                 fullEntries.AddRange(entries);
 
-                foreach (var d in entries.Where(e => e.Type == EntryType.Directory)) {
-                    dirQueue.Enqueue(new DirectoryQueueEntry {
+                foreach (var d in entries.Where(e => e.Type == EntryType.Directory))
+                {
+                    dirQueue.Enqueue(new DirectoryQueueEntry
+                    {
                         Path = d.Path,
                         Index = d.Index
                     });
@@ -144,7 +177,8 @@ namespace isocd_builder {
 
                 parentDir = null;
 
-                if (dirQueue.Count > 0) {
+                if (dirQueue.Count > 0)
+                {
                     parentDirectoryNumber++;
                     parentDir = dirQueue.Dequeue();
                 }
@@ -154,9 +188,10 @@ namespace isocd_builder {
         /// <summary>
         /// Gets the info for a file or directory from the source file system.
         /// </summary>
-        void GetEntryInfo(Iso9660Entry entry) {
+        void GetEntryInfo(Iso9660Entry entry)
+        {
 #if !ACTUAL_RELEASE
-            var fileInfo = _fileSystem.FileInfo.FromFileName(entry.Path);
+            var fileInfo = _fileSystem.FileInfo.New(entry.Path);
 #else
             var fileInfo = new FileInfoBase(entry.Path);
 #endif
@@ -165,15 +200,18 @@ namespace isocd_builder {
             entry.DateStamp = fileInfo.LastWriteTimeUtc;
 
             // And size if a file
-            if(entry.Type == EntryType.File) {
+            if (entry.Type == EntryType.File)
+            {
                 entry.Size = fileInfo.Length;
             }
-            else {
+            else
+            {
                 // Calculate the path table record size for directories
                 entry.PathTableRecordSize = isocd_builder_constants.MINIMUM_PATH_TABLE_RECORD_SIZE + (entry.Identifier.Length - 1);
 
                 // Padding is only required if the entry identifier length is odd
-                if((entry.Identifier.Length & 1) == 1) {
+                if ((entry.Identifier.Length & 1) == 1)
+                {
                     entry.PathTableRecordSize++;
                 }
             }
@@ -182,7 +220,8 @@ namespace isocd_builder {
             entry.DirectoryRecordSize = isocd_builder_constants.MINIMUM_DIR_RECORD_SIZE + (entry.Identifier.Length - 1);
 
             // Padding is only required if the entry identifier length is even
-            if((entry.Identifier.Length & 1) == 0) {
+            if ((entry.Identifier.Length & 1) == 0)
+            {
                 entry.DirectoryRecordSize++;
             }
         }
@@ -191,7 +230,8 @@ namespace isocd_builder {
         /// Writes the CDFS (Compact Disc File System) options to the provided binary stream. Also includes the custom trademark file if provided
         /// to allow booting of the CD on the CD32 or CDTV.
         /// </summary>
-        int WriteCDFSOptions(BinaryWriter binWriter, int tmSize, int tmStartSector) {
+        int WriteCDFSOptions(BinaryWriter binWriter, int tmSize, int tmStartSector)
+        {
             var bytesWritten = 0;
 
             binWriter.Write((byte)0x00);
@@ -208,7 +248,8 @@ namespace isocd_builder {
             bytesWritten += WriteBooleanCDFSOption(binWriter, options.SpeedIndependent, isocd_builder_constants.SPEED_INDEPENDENT_NAME);
 
             // Include the trademark file if provided
-            if(tmSize > 0) {
+            if (tmSize > 0)
+            {
                 binWriter.Write(isocd_builder_constants.TRADEMARK_NAME.ToCharArray());
 
                 // All of these need to be written in big-endian for the Amiga
@@ -224,9 +265,11 @@ namespace isocd_builder {
         /// <summary>
         /// Writes a numeric CDFS option to the binary stream.
         /// </summary>
-        int WriteNumericCDFSOption(BinaryWriter binWriter, int value, int defaultValue, string name) {
+        int WriteNumericCDFSOption(BinaryWriter binWriter, int value, int defaultValue, string name)
+        {
             // Only write the value to the stream if it differs from the system default
-            if(value != defaultValue) {
+            if (value != defaultValue)
+            {
                 binWriter.Write(name.ToCharArray());
                 binWriter.Write(EndianHelper.ChangeEndian((ushort)0x02));
                 binWriter.Write(EndianHelper.ChangeEndian((ushort)value));
@@ -238,9 +281,11 @@ namespace isocd_builder {
         /// <summary>
         /// Writes a boolean CDFS option to the binary stream.
         /// </summary>
-        int WriteBooleanCDFSOption(BinaryWriter binWriter, bool value, string name) {
+        int WriteBooleanCDFSOption(BinaryWriter binWriter, bool value, string name)
+        {
             // Only write to the stream if the option is true
-            if(value) {
+            if (value)
+            {
                 binWriter.Write(name.ToCharArray());
                 binWriter.Write(EndianHelper.ChangeEndian((ushort)0x00));
                 return 4;
@@ -260,10 +305,12 @@ namespace isocd_builder {
                                             uint bigEndianPathTableStartSector,
                                             uint littleEndianPathTableStartSector,
                                             int trademarkSize,
-                                            int trademarkStartSector) {
+                                            int trademarkStartSector)
+        {
             var volumeDescriptor = new MemoryStream(2048);
 
-            using(var volumeDescriptorWriter = new BinaryWriter(volumeDescriptor)) {
+            using (var volumeDescriptorWriter = new BinaryWriter(volumeDescriptor))
+            {
                 // Type Code
                 volumeDescriptorWriter.Write((byte)0x01);
 
@@ -347,7 +394,8 @@ namespace isocd_builder {
 
                 var now = DateTime.Now;
 
-                if(_usingMockFileSystem) {
+                if (_usingMockFileSystem)
+                {
                     // As we know we're under test, just set an arbitrary date and time to allow the hash checks to pass
                     now = new DateTime(2000, 01, 01, 00, 00, 00);
                 }
@@ -404,19 +452,23 @@ namespace isocd_builder {
         /// Calculates the space required for the ISO9660 path table. The ISO will contain two copies of this, one in big-endian format for the Amiga and
         /// another in little-endian for other systems, both of which are aligned to a sector size of 2048 bytes as per the ISO9660 spec.
         /// </summary>
-        int CalcPathTableSize() {
+        int CalcPathTableSize()
+        {
             return fullEntries.Where(e => e.Type == EntryType.Directory).Sum(e => e.PathTableRecordSize);
         }
 
         /// <summary>
         /// Generates the path table in either big or little-endian format.
         /// </summary>
-        byte[] GeneratePathTable(bool littleEndian) {
+        byte[] GeneratePathTable(bool littleEndian)
+        {
             var pathTable = new MemoryStream(2048);
 
-            using(var pathTableWriter = new BinaryWriter(pathTable)) {
+            using (var pathTableWriter = new BinaryWriter(pathTable))
+            {
 
-                foreach(var entry in fullEntries.Where(f => f.Type == EntryType.Directory)) {
+                foreach (var entry in fullEntries.Where(f => f.Type == EntryType.Directory))
+                {
                     var paddingByteRequired = entry.Identifier.Length % 2 > 0;
 
                     // ISOCD stores the directory names in the path table in uppercase (actual names are left intact)
@@ -429,25 +481,30 @@ namespace isocd_builder {
                     pathTableWriter.Write((byte)0x00);
 
                     // Location of Extent (LBA)
-                    if(littleEndian) {
+                    if (littleEndian)
+                    {
                         pathTableWriter.Write((uint)entry.StartingSector);
                     }
-                    else {
+                    else
+                    {
                         pathTableWriter.Write(EndianHelper.ChangeEndian((uint)entry.StartingSector));
                     }
 
                     // Directory number of parent directory
-                    if(littleEndian) {
+                    if (littleEndian)
+                    {
                         pathTableWriter.Write(entry.ParentDirectoryNumber);
                     }
-                    else {
+                    else
+                    {
                         pathTableWriter.Write(EndianHelper.ChangeEndian(entry.ParentDirectoryNumber));
                     }
 
                     // Directory Identifier (name)
                     pathTableWriter.Write(dirId.ToCharArray());
 
-                    if(paddingByteRequired) {
+                    if (paddingByteRequired)
+                    {
                         pathTableWriter.Write((byte)0x00);
                     }
                 }
@@ -466,16 +523,20 @@ namespace isocd_builder {
         /// <summary>
         /// Determines the starting sector for each file or directory in the file system. This information is used when generating the path tables.
         /// </summary>
-        void GetEntryPositions(int startingSector) {
+        void GetEntryPositions(int startingSector)
+        {
             long sectorPos;
             var currentSector = startingSector;
 
-            foreach(var entry in fullEntries) {
-                if(entry.Type == EntryType.File) {
+            foreach (var entry in fullEntries)
+            {
+                if (entry.Type == EntryType.File)
+                {
                     entry.SectorAlignedSize = AlignToSectorBoundary((int)entry.Size);
                     entry.NumberOfSectors = (int)(entry.SectorAlignedSize / isocd_builder_constants.SECTOR_SIZE);
                 }
-                else if(entry.Type == EntryType.Directory) {
+                else if (entry.Type == EntryType.Directory)
+                {
                     // Allow for the first and second directories ("." and "..")     
                     var totalSize = 2 * isocd_builder_constants.MINIMUM_DIR_RECORD_SIZE;
                     sectorPos = totalSize;
@@ -483,10 +544,12 @@ namespace isocd_builder {
                     var children = GetChildEntriesForDirectory(entry.DirectoryNumber);
 
                     // Calculate the size of the child files and directories
-                    foreach(var child in children) {
+                    foreach (var child in children)
+                    {
                         // Directory entries must not cross a sector boundary, so pad the current sector
                         // with zeroes so that the directory entry starts on the next consecutive sector
-                        if(sectorPos + child.DirectoryRecordSize > isocd_builder_constants.SECTOR_SIZE) {
+                        if (sectorPos + child.DirectoryRecordSize > isocd_builder_constants.SECTOR_SIZE)
+                        {
                             totalSize += (int)(isocd_builder_constants.SECTOR_SIZE - sectorPos);
                             sectorPos = 0;
                         }
@@ -510,31 +573,42 @@ namespace isocd_builder {
         /// <summary>
         /// Writes the files and directories to the binary stream.
         /// </summary>
-        void WriteFilesAndDirectories(Stream isostream, BinaryWriter binWriter, BuildIsoWorker worker) {
+        void WriteFilesAndDirectories(Stream isostream, BinaryWriter binWriter, BuildIsoWorker worker)
+        {
             long sectorPos = 0;
 
             reportProgressUserState.TotalEntries = fullEntries.Count;
             reportProgressUserState.CurrentEntry = 0;
 
-            foreach(var entry in fullEntries) {
+            foreach (var entry in fullEntries)
+            {
                 worker.Token.ThrowIfCancellationRequested();
 
                 reportProgressUserState.CurrentEntry++;
 
-                if(entry.Type == EntryType.File) {
+                if (entry.Type == EntryType.File)
+                {
                     // Empty files still occupy a single sector
-                    if(entry.Size == 0) {
+                    if (entry.Size == 0)
+                    {
                         isostream.Seek(isocd_builder_constants.SECTOR_SIZE, SeekOrigin.Current);
                     }
-                    else {
-                        using(var entrystream = _fileSystem.File.OpenRead(entry.Path)) {
+                    else
+                    {
+#if !ACTUAL_RELEASE
+                        using (var entrystream = _fileSystem.File.OpenRead(entry.Path))
+#else
+                        using (var entrystream = File.OpenRead(entry.Path))
+#endif
+                        {
                             entrystream.CopyToWithCancel(isostream, worker.Token);
                         }
 
                         sectorPos = entry.Size % isocd_builder_constants.SECTOR_SIZE;
                     }
                 }
-                else {
+                else
+                {
                     // Add the first and second directories ("." and "..")                
                     WriteDirectoryRecord(fullEntries[entry.Index], binWriter, WriteDirectoryType.FirstDirectoryRecord);
                     WriteDirectoryRecord(fullEntries[entry.ParentDirectoryIndex], binWriter, WriteDirectoryType.SecondDirectoryRecord);
@@ -542,12 +616,14 @@ namespace isocd_builder {
 
                     var children = GetChildEntriesForDirectory(entry.DirectoryNumber);
 
-                    foreach(var child in children) {
+                    foreach (var child in children)
+                    {
                         worker.Token.ThrowIfCancellationRequested();
 
                         // Directory entries must not cross a sector boundary, so pad the current sector
                         // with zeroes so that the directory entry starts on the next consecutive sector
-                        if(sectorPos + child.DirectoryRecordSize > isocd_builder_constants.SECTOR_SIZE) {
+                        if (sectorPos + child.DirectoryRecordSize > isocd_builder_constants.SECTOR_SIZE)
+                        {
                             binWriter.Seek((int)(isocd_builder_constants.SECTOR_SIZE - sectorPos), SeekOrigin.Current);
                             sectorPos = 0;
                         }
@@ -558,7 +634,8 @@ namespace isocd_builder {
                     }
                 }
 
-                if(sectorPos > 0) {
+                if (sectorPos > 0)
+                {
                     // Pad to the sector boundary with zeroes if necessary
                     binWriter.Seek((int)(isocd_builder_constants.SECTOR_SIZE - sectorPos), SeekOrigin.Current);
                 }
@@ -571,12 +648,15 @@ namespace isocd_builder {
         /// <summary>
         /// Writes a directory record to the binary stream.
         /// </summary>
-        void WriteDirectoryRecord(Iso9660Entry entry, BinaryWriter binWriter, WriteDirectoryType writeDirectoryType = WriteDirectoryType.Normal) {
+        void WriteDirectoryRecord(Iso9660Entry entry, BinaryWriter binWriter, WriteDirectoryType writeDirectoryType = WriteDirectoryType.Normal)
+        {
             // Length of Directory Record
-            if(writeDirectoryType == WriteDirectoryType.Normal) {
+            if (writeDirectoryType == WriteDirectoryType.Normal)
+            {
                 binWriter.Write((byte)entry.DirectoryRecordSize);
             }
-            else {
+            else
+            {
                 binWriter.Write((byte)isocd_builder_constants.MINIMUM_DIR_RECORD_SIZE);
             }
 
@@ -587,10 +667,12 @@ namespace isocd_builder {
             binWriter.Write(EndianHelper.BothEndian((uint)entry.StartingSector));
 
             // Data Length
-            if(entry.Type == EntryType.Directory) {
+            if (entry.Type == EntryType.Directory)
+            {
                 binWriter.Write(EndianHelper.BothEndian((uint)entry.SectorAlignedSize));
             }
-            else {
+            else
+            {
                 binWriter.Write(EndianHelper.BothEndian((uint)entry.Size));
             }
 
@@ -598,10 +680,12 @@ namespace isocd_builder {
             binWriter.Write(entry.BinaryDate);
 
             // File Flags
-            if(entry.Type == EntryType.Directory) {
+            if (entry.Type == EntryType.Directory)
+            {
                 binWriter.Write((byte)isocd_builder_constants.DIR_FLAG);
             }
-            else {
+            else
+            {
                 binWriter.Write((byte)0x00);
             }
 
@@ -612,15 +696,18 @@ namespace isocd_builder {
             binWriter.Seek(6, SeekOrigin.Current);
 
             // Length of File Identifier
-            if(writeDirectoryType == WriteDirectoryType.Normal) {
+            if (writeDirectoryType == WriteDirectoryType.Normal)
+            {
                 binWriter.Write((byte)entry.Identifier.Length);
             }
-            else {
+            else
+            {
                 binWriter.Write((byte)0x01);
             }
 
             // File Identifier
-            switch(writeDirectoryType) {
+            switch (writeDirectoryType)
+            {
                 case WriteDirectoryType.FirstDirectoryRecord:
                     binWriter.Write((byte)0x00);
                     break;
@@ -632,7 +719,8 @@ namespace isocd_builder {
                     binWriter.Write(entry.Identifier.ToCharArray());
 
                     // Pad record if the identifier length is even
-                    if((entry.Identifier.Length & 1) == 0) {
+                    if ((entry.Identifier.Length & 1) == 0)
+                    {
                         binWriter.Write((byte)0x00);
                     }
                     break;
@@ -642,7 +730,8 @@ namespace isocd_builder {
         /// <summary>
         /// Returns all child entries associated with a given directory number.
         /// </summary>
-        IEnumerable<Iso9660Entry> GetChildEntriesForDirectory(int directoryNumber) {
+        IEnumerable<Iso9660Entry> GetChildEntriesForDirectory(int directoryNumber)
+        {
             // Excludes root if necessary with Index 0 (which has both ParentDirectoryNumber and DirectoryNumber set to 1)
             return fullEntries.Where(
                 e => e.ParentDirectoryNumber == directoryNumber &&
@@ -654,9 +743,11 @@ namespace isocd_builder {
         /// Calculates the required sector aligned size to store data of the provided size.
         /// The default sector size for ISO9660 is 2048 bytes.
         /// </summary>
-        int AlignToSectorBoundary(int size) {
+        int AlignToSectorBoundary(int size)
+        {
             // Empty files still occupy a single sector
-            if(size == 0) {
+            if (size == 0)
+            {
                 return isocd_builder_constants.SECTOR_SIZE;
             }
 
@@ -666,21 +757,42 @@ namespace isocd_builder {
         /// <summary>
         /// Builds the ISO image in accordance with the options provided when the class was instantiated.
         /// </summary>
-        public void BuildIso(BuildIsoWorker worker) {
+        public void BuildIso(BuildIsoWorker worker)
+        {
             // Check provided input folder exists
-            if(!_fileSystem.Directory.Exists(options.InputFolder)) {
+#if !ACTUAL_RELEASE
+            if (!_fileSystem.Directory.Exists(options.InputFolder))
+            {
                 throw new InvalidOperationException(isocd_builder_constants.ERROR_MESSAGE_INPUT_FOLDER_MUST_EXIST);
             }
 
             // Check provided output folder exists
-            if(!_fileSystem.Directory.Exists(_fileSystem.Path.GetDirectoryName(options.OutputFile))) {
+            if (!_fileSystem.Directory.Exists(_fileSystem.Path.GetDirectoryName(options.OutputFile)))
+            {
                 throw new InvalidOperationException(isocd_builder_constants.ERROR_MESSAGE_OUTPUT_FOLDER_MUST_EXIST);
             }
 
             // Check provided trademark file exists
-            if(!_fileSystem.File.Exists(options.TrademarkFile) && options.Trademark) {
+            if (!_fileSystem.File.Exists(options.TrademarkFile) && options.Trademark)
+            {
                 throw new InvalidOperationException(isocd_builder_constants.ERROR_MESSAGE_TRADEMARK_FILE_MUST_EXIST);
             }
+#else
+            if (!Directory.Exists(options.InputFolder))
+            {
+                throw new InvalidOperationException(isocd_builder_constants.ERROR_MESSAGE_INPUT_FOLDER_MUST_EXIST);
+            }
+
+            if (!Directory.Exists(Path.GetDirectoryName(options.OutputFile)))
+            {
+                throw new InvalidOperationException(isocd_builder_constants.ERROR_MESSAGE_OUTPUT_FOLDER_MUST_EXIST);
+            }
+
+            if (options.Trademark && !File.Exists(options.TrademarkFile))
+            {
+                throw new InvalidOperationException(isocd_builder_constants.ERROR_MESSAGE_TRADEMARK_FILE_MUST_EXIST);
+            }
+#endif
 
             fullEntries.Clear();
             indexCounter = 0;
@@ -690,7 +802,8 @@ namespace isocd_builder {
             byte[] tmBytes = null;
 
             // Add root record before we begin scanning
-            var rootEntry = new Iso9660Entry {
+            var rootEntry = new Iso9660Entry
+            {
                 Index = indexCounter++,
                 Type = EntryType.Directory,
                 ParentDirectoryNumber = 1,
@@ -702,25 +815,34 @@ namespace isocd_builder {
             GetEntryInfo(rootEntry);
             fullEntries.Add(rootEntry);
 
-            TreeScan(new DirectoryQueueEntry {
+            TreeScan(new DirectoryQueueEntry
+            {
                 Path = rootEntry.Path,
                 Index = rootEntry.Index
             }, 1, worker);
 
             // Check provided input folder isn't empty
-            if(fullEntries.Count() == 1) {
+            if (fullEntries.Count() == 1)
+            {
                 throw new InvalidOperationException(isocd_builder_constants.ERROR_MESSAGE_INPUT_FOLDER_IS_EMPTY);
             }
 
             var pathTableSize = CalcPathTableSize();
 
-            if(useTmFile) {
-                using(var tmStream = _fileSystem.File.OpenRead(options.TrademarkFile)) {
+            if (useTmFile)
+            {
+#if !ACTUAL_RELEASE
+                using (var tmStream = _fileSystem.File.OpenRead(options.TrademarkFile))
+#else
+                using (var tmStream = File.OpenRead(options.TrademarkFile))
+#endif
+                {
                     tmBytes = new byte[tmStream.Length];
                     tmStream.Read(tmBytes, 0, (int)tmStream.Length);
                 }
             }
-            else {
+            else
+            {
                 tmBytes = new byte[0];
             }
 
@@ -749,7 +871,8 @@ namespace isocd_builder {
 
             var maxSectors = 0;
 
-            switch(options.PadSize) {
+            switch (options.PadSize)
+            {
                 case PadSizeType.Cdr74:
                     maxSectors = isocd_builder_constants.MAX_SECTORS_CDR74;
                     break;
@@ -766,7 +889,8 @@ namespace isocd_builder {
             }
 
             // Check data will not exceed max sectors
-            if (totalSectors > maxSectors) {
+            if (totalSectors > maxSectors)
+            {
                 throw new InvalidOperationException(isocd_builder_constants.ERROR_MESSAGE_ISO_IMAGE_TOO_BIG);
             }
 
@@ -800,13 +924,17 @@ namespace isocd_builder {
                 }
             }
 
-
             var pathTableLittleEndian = GeneratePathTable(true);
             var pathTableBigEndian = GeneratePathTable(false);
 
+#if !ACTUAL_RELEASE
             using (var isoStream = _fileSystem.File.Open(options.OutputFile, FileMode.Create))
+#else
+            using (var isoStream = File.Open(options.OutputFile, FileMode.Create))
+#endif
             // Use the same character encoding as AmigaDOS
-            using (var binWriter = new BinaryWriter(isoStream, Encoding.GetEncoding("ISO-8859-1"))) {
+            using (var binWriter = new BinaryWriter(isoStream, Encoding.GetEncoding("ISO-8859-1")))
+            {
                 // Write out the System Area blank sectors at the start of the image (32kb)
                 isoStream.Seek(16 * isocd_builder_constants.SECTOR_SIZE, SeekOrigin.Begin);
 
@@ -827,13 +955,15 @@ namespace isocd_builder {
                 // Write little endian path table
                 binWriter.Write(pathTableLittleEndian);
 
-                if(useTmFile) {
+                if (useTmFile)
+                {
                     // Write the CDTV.TM / CD32.TM file and align to sector boundary
                     binWriter.Write(tmBytes);
                     binWriter.Seek(AlignToSectorBoundary(tmBytes.Length) - tmBytes.Length, SeekOrigin.Current);
                 }
 
-                if(paddingSectors > 0) {
+                if (paddingSectors > 0)
+                {
                     worker.ReportProgress(new WorkerUpdateStatus { StatusMessage = "Adding padding to start of image..." });
 
                     // Add empty space at the beginning of the image to speed up CD reading with doublespeed

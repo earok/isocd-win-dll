@@ -53,7 +53,8 @@ namespace isocd_builder.Tests {
                 FastSearch = true,
                 SpeedIndependent = true,
                 PadSize = PadSizeType.Cdr80,
-                TargetSystem = TargetSystemType.CD32
+                TargetSystem = TargetSystemType.CD32,
+                PriorityListFilePath = @"c:\amiga"
             };
         }
 
@@ -81,6 +82,7 @@ namespace isocd_builder.Tests {
                 $"{leadingPattern}s",
                 $"{leadingPattern}ps", "cdr80",
                 $"{leadingPattern}ts", "cd32",
+                $"{leadingPattern}pr", @"c:\amiga"
             };
 
             if(makeArgsUpperCase) {
@@ -117,6 +119,7 @@ namespace isocd_builder.Tests {
                 $"{leadingPattern}SpeedIndependent",
                 $"{leadingPattern}PadSize", "CDR80",
                 $"{leadingPattern}TargetSystem", "CD32",
+                $"{leadingPattern}PriorityListFilePath", @"c:\amiga"
             };
 
             if(makeArgsUpperCase) {

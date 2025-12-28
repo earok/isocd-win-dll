@@ -1,6 +1,7 @@
 ﻿using NUnit.Framework;
 using System;
 using System.IO.Abstractions.TestingHelpers;
+using System.IO;
 
 namespace isocd_builder.Tests {
     /// <summary>
@@ -38,7 +39,7 @@ namespace isocd_builder.Tests {
                 component.BuildIso(new BuildIsoWorker());
             }
             catch(InvalidOperationException ex) {
-                Assert.AreEqual(isocd_builder_constants.ERROR_MESSAGE_INPUT_FOLDER_MUST_EXIST, ex.Message);
+                Assert.That(isocd_builder_constants.ERROR_MESSAGE_INPUT_FOLDER_MUST_EXIST, Is.EqualTo(ex.Message));
                 return;
             }
 
@@ -65,7 +66,7 @@ namespace isocd_builder.Tests {
                 component.BuildIso(new BuildIsoWorker());
             }
             catch(InvalidOperationException ex) {
-                Assert.AreEqual(isocd_builder_constants.ERROR_MESSAGE_OUTPUT_FOLDER_MUST_EXIST, ex.Message);
+                Assert.That(isocd_builder_constants.ERROR_MESSAGE_OUTPUT_FOLDER_MUST_EXIST, Is.EqualTo(ex.Message));
                 return;
             }
 
@@ -89,7 +90,7 @@ namespace isocd_builder.Tests {
                 component.BuildIso(new BuildIsoWorker());
             }
             catch(InvalidOperationException ex) {
-                Assert.AreEqual(isocd_builder_constants.ERROR_MESSAGE_TRADEMARK_FILE_MUST_EXIST, ex.Message);
+                Assert.That(isocd_builder_constants.ERROR_MESSAGE_TRADEMARK_FILE_MUST_EXIST, Is.EqualTo(ex.Message));
                 return;
             }
 
@@ -118,7 +119,7 @@ namespace isocd_builder.Tests {
                 component.BuildIso(new BuildIsoWorker());
             }
             catch(InvalidOperationException ex) {
-                Assert.AreEqual(isocd_builder_constants.ERROR_MESSAGE_INPUT_FOLDER_IS_EMPTY, ex.Message);
+                Assert.That(isocd_builder_constants.ERROR_MESSAGE_INPUT_FOLDER_IS_EMPTY, Is.EqualTo(ex.Message));
                 return;
             }
 
@@ -145,7 +146,7 @@ namespace isocd_builder.Tests {
                 component.BuildIso(new BuildIsoWorker());
             }
             catch(InvalidOperationException ex) {
-                Assert.Fail($"An InvalidOperationException exception was thrown: {ex.Message}");
+                Assert.Fail($"An InvalidOperationException exception was thrown: {Is.EqualTo(ex.Message)}");
                 return;
             }
 
@@ -169,7 +170,7 @@ namespace isocd_builder.Tests {
             var component = new Iso9660(fileSystem, basicOptions);
             component.BuildIso(new BuildIsoWorker());
 
-            Assert.IsTrue(fileSystem.FileExists(basicOptions.OutputFile));
+            Assert.That(fileSystem.FileExists(basicOptions.OutputFile));
         }
 
         [Test]
@@ -189,7 +190,7 @@ namespace isocd_builder.Tests {
             var component = new Iso9660(fileSystem, basicOptions);
             component.BuildIso(new BuildIsoWorker());
 
-            Assert.AreEqual(fileSystem.FileInfo.FromFileName(basicOptions.OutputFile).Length, CORRECT_ISO_SIZE_WITH_CD32_TRADEMARK_FILE);
+            Assert.That(fileSystem.FileInfo.New(basicOptions.OutputFile).Length, Is.EqualTo(CORRECT_ISO_SIZE_WITH_CD32_TRADEMARK_FILE));
         }
 
         [Test]
@@ -209,7 +210,7 @@ namespace isocd_builder.Tests {
             var component = new Iso9660(fileSystem, basicOptions);
             component.BuildIso(new BuildIsoWorker());
 
-            Assert.AreEqual(fileSystem.FileInfo.FromFileName(basicOptions.OutputFile).Length, CORRECT_ISO_SIZE_WITH_CDTV_TRADEMARK_FILE);
+            Assert.That(fileSystem.FileInfo.New(basicOptions.OutputFile).Length, Is.EqualTo(CORRECT_ISO_SIZE_WITH_CDTV_TRADEMARK_FILE));
         }
 
         [Test]
@@ -225,7 +226,7 @@ namespace isocd_builder.Tests {
             var component = new Iso9660(fileSystem, basicOptions);
             component.BuildIso(new BuildIsoWorker());
 
-            Assert.AreEqual(fileSystem.FileInfo.FromFileName(basicOptions.OutputFile).Length, CORRECT_ISO_SIZE_WITHOUT_TRADEMARK_FILE);
+            Assert.That(fileSystem.FileInfo.New(basicOptions.OutputFile).Length, Is.EqualTo(CORRECT_ISO_SIZE_WITHOUT_TRADEMARK_FILE));
         }
 
         [Test]
@@ -246,7 +247,7 @@ namespace isocd_builder.Tests {
             component.BuildIso(new BuildIsoWorker());
 
             var sha1Hash = HashHelper.GetSHA1HashFromBuffer(fileSystem.GetFile(basicOptions.OutputFile).Contents);
-            Assert.AreEqual(sha1Hash, CORRECT_CD32_ISO_SHA1_HASH);
+            Assert.That(sha1Hash, Is.EqualTo(CORRECT_CD32_ISO_SHA1_HASH));
         }
 
         [Test]
@@ -267,7 +268,7 @@ namespace isocd_builder.Tests {
             component.BuildIso(new BuildIsoWorker());
 
             var sha1Hash = HashHelper.GetSHA1HashFromBuffer(fileSystem.GetFile(basicOptions.OutputFile).Contents);
-            Assert.AreEqual(sha1Hash, CORRECT_CDTV_ISO_SHA1_HASH);
+            Assert.That(sha1Hash, Is.EqualTo(CORRECT_CDTV_ISO_SHA1_HASH));
         }
 
         [Test]
@@ -284,7 +285,7 @@ namespace isocd_builder.Tests {
             component.BuildIso(new BuildIsoWorker());
 
             var sha1Hash = HashHelper.GetSHA1HashFromBuffer(fileSystem.GetFile(basicOptions.OutputFile).Contents);
-            Assert.AreEqual(sha1Hash, CORRECT_AMIGA_ISO_SHA1_HASH);
+            Assert.That(sha1Hash, Is.EqualTo(CORRECT_AMIGA_ISO_SHA1_HASH));
         }
     }
 }

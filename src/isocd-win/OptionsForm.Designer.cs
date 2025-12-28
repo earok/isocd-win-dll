@@ -54,17 +54,20 @@
             this.imagePaddingLabel = new System.Windows.Forms.Label();
             this.WinUAETestCheckBox = new System.Windows.Forms.CheckBox();
             this.cdfsGroupBox = new System.Windows.Forms.GroupBox();
-            this.dirCacheTextBox = new isocd_win.ValueBox();
-            this.dataCacheTextBox = new isocd_win.ValueBox();
-            this.fileLockTextBox = new isocd_win.ValueBox();
-            this.fileHandleTextBox = new isocd_win.ValueBox();
-            this.retriesTextBox = new isocd_win.ValueBox();
             this.isoGroupBox = new System.Windows.Forms.GroupBox();
             this.generalGroupBox = new System.Windows.Forms.GroupBox();
             this.winUAEBrowseButton = new System.Windows.Forms.Button();
             this.winUAEPathLabel = new System.Windows.Forms.Label();
             this.winUAEPathTextBox = new System.Windows.Forms.TextBox();
             this.HelpTextBox = new System.Windows.Forms.TextBox();
+            this.dirCacheTextBox = new isocd_win.ValueBox();
+            this.dataCacheTextBox = new isocd_win.ValueBox();
+            this.fileLockTextBox = new isocd_win.ValueBox();
+            this.fileHandleTextBox = new isocd_win.ValueBox();
+            this.retriesTextBox = new isocd_win.ValueBox();
+            this.PrirityListFile = new System.Windows.Forms.Label();
+            this.priorityFilePathTextBox = new System.Windows.Forms.TextBox();
+            this.PriorityFileBrowseButton = new System.Windows.Forms.Button();
             this.cdfsGroupBox.SuspendLayout();
             this.isoGroupBox.SuspendLayout();
             this.generalGroupBox.SuspendLayout();
@@ -76,7 +79,7 @@
             this.okButton.Margin = new System.Windows.Forms.Padding(4);
             this.okButton.Name = "okButton";
             this.okButton.Size = new System.Drawing.Size(100, 28);
-            this.okButton.TabIndex = 39;
+            this.okButton.TabIndex = 42;
             this.okButton.Text = "OK";
             this.okButton.UseVisualStyleBackColor = true;
             this.okButton.Click += new System.EventHandler(this.OkButton_Click);
@@ -87,7 +90,7 @@
             this.cancelButton.Margin = new System.Windows.Forms.Padding(4);
             this.cancelButton.Name = "cancelButton";
             this.cancelButton.Size = new System.Drawing.Size(100, 28);
-            this.cancelButton.TabIndex = 40;
+            this.cancelButton.TabIndex = 43;
             this.cancelButton.Text = "Cancel";
             this.cancelButton.UseVisualStyleBackColor = true;
             this.cancelButton.Click += new System.EventHandler(this.CancelButton_Click);
@@ -243,7 +246,7 @@
             this.speedIndCheckBox.Name = "speedIndCheckBox";
             this.speedIndCheckBox.Size = new System.Drawing.Size(98, 21);
             this.speedIndCheckBox.TabIndex = 18;
-            this.speedIndCheckBox.Tag = "Allow reading at higher speeds with newer drives.";
+            this.speedIndCheckBox.Tag = resources.GetString("speedIndCheckBox.Tag");
             this.speedIndCheckBox.Text = "Speed Ind.";
             this.speedIndCheckBox.UseVisualStyleBackColor = true;
             this.speedIndCheckBox.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.textBox_HelpRequested);
@@ -254,7 +257,7 @@
             this.restoreDefaultsButton.Margin = new System.Windows.Forms.Padding(4);
             this.restoreDefaultsButton.Name = "restoreDefaultsButton";
             this.restoreDefaultsButton.Size = new System.Drawing.Size(141, 28);
-            this.restoreDefaultsButton.TabIndex = 38;
+            this.restoreDefaultsButton.TabIndex = 41;
             this.restoreDefaultsButton.Text = "Restore Defaults";
             this.restoreDefaultsButton.UseVisualStyleBackColor = true;
             this.restoreDefaultsButton.Click += new System.EventHandler(this.RestoreDefaultsButton_Click);
@@ -262,7 +265,7 @@
             // playSoundsCheckBox
             // 
             this.playSoundsCheckBox.AutoSize = true;
-            this.playSoundsCheckBox.Location = new System.Drawing.Point(21, 23);
+            this.playSoundsCheckBox.Location = new System.Drawing.Point(384, 23);
             this.playSoundsCheckBox.Margin = new System.Windows.Forms.Padding(4);
             this.playSoundsCheckBox.Name = "playSoundsCheckBox";
             this.playSoundsCheckBox.Size = new System.Drawing.Size(109, 21);
@@ -391,7 +394,7 @@
             // WinUAETestCheckBox
             // 
             this.WinUAETestCheckBox.AutoSize = true;
-            this.WinUAETestCheckBox.Location = new System.Drawing.Point(21, 49);
+            this.WinUAETestCheckBox.Location = new System.Drawing.Point(20, 23);
             this.WinUAETestCheckBox.Margin = new System.Windows.Forms.Padding(4);
             this.WinUAETestCheckBox.Name = "WinUAETestCheckBox";
             this.WinUAETestCheckBox.Size = new System.Drawing.Size(142, 21);
@@ -426,6 +429,94 @@
             this.cdfsGroupBox.TabIndex = 1;
             this.cdfsGroupBox.TabStop = false;
             this.cdfsGroupBox.Text = "CDFS";
+            // 
+            // isoGroupBox
+            // 
+            this.isoGroupBox.Controls.Add(this.volumeSetIdTextBox);
+            this.isoGroupBox.Controls.Add(this.volumeIdTextBox);
+            this.isoGroupBox.Controls.Add(this.volumeIdLabel);
+            this.isoGroupBox.Controls.Add(this.imagePaddingLabel);
+            this.isoGroupBox.Controls.Add(this.imagePaddingComboBox);
+            this.isoGroupBox.Controls.Add(this.volSetIdLabel);
+            this.isoGroupBox.Controls.Add(this.publisherIdTextBox);
+            this.isoGroupBox.Controls.Add(this.applicationIdLabel);
+            this.isoGroupBox.Controls.Add(this.publisherIdLabel);
+            this.isoGroupBox.Controls.Add(this.applicationIdTextBox);
+            this.isoGroupBox.Controls.Add(this.dataPreparerIdTextBox);
+            this.isoGroupBox.Controls.Add(this.dataPreparerIdLabel);
+            this.isoGroupBox.Location = new System.Drawing.Point(443, 4);
+            this.isoGroupBox.Margin = new System.Windows.Forms.Padding(4);
+            this.isoGroupBox.Name = "isoGroupBox";
+            this.isoGroupBox.Padding = new System.Windows.Forms.Padding(4);
+            this.isoGroupBox.Size = new System.Drawing.Size(497, 287);
+            this.isoGroupBox.TabIndex = 19;
+            this.isoGroupBox.TabStop = false;
+            this.isoGroupBox.Text = "ISO";
+            // 
+            // generalGroupBox
+            // 
+            this.generalGroupBox.Controls.Add(this.PriorityFileBrowseButton);
+            this.generalGroupBox.Controls.Add(this.priorityFilePathTextBox);
+            this.generalGroupBox.Controls.Add(this.PrirityListFile);
+            this.generalGroupBox.Controls.Add(this.winUAEBrowseButton);
+            this.generalGroupBox.Controls.Add(this.winUAEPathLabel);
+            this.generalGroupBox.Controls.Add(this.winUAEPathTextBox);
+            this.generalGroupBox.Controls.Add(this.WinUAETestCheckBox);
+            this.generalGroupBox.Controls.Add(this.playSoundsCheckBox);
+            this.generalGroupBox.Location = new System.Drawing.Point(443, 301);
+            this.generalGroupBox.Margin = new System.Windows.Forms.Padding(4);
+            this.generalGroupBox.Name = "generalGroupBox";
+            this.generalGroupBox.Padding = new System.Windows.Forms.Padding(4);
+            this.generalGroupBox.Size = new System.Drawing.Size(497, 113);
+            this.generalGroupBox.TabIndex = 32;
+            this.generalGroupBox.TabStop = false;
+            this.generalGroupBox.Text = "General";
+            // 
+            // winUAEBrowseButton
+            // 
+            this.winUAEBrowseButton.Location = new System.Drawing.Point(388, 50);
+            this.winUAEBrowseButton.Margin = new System.Windows.Forms.Padding(4);
+            this.winUAEBrowseButton.Name = "winUAEBrowseButton";
+            this.winUAEBrowseButton.Size = new System.Drawing.Size(100, 28);
+            this.winUAEBrowseButton.TabIndex = 37;
+            this.winUAEBrowseButton.Text = "Browse";
+            this.winUAEBrowseButton.UseVisualStyleBackColor = true;
+            this.winUAEBrowseButton.Click += new System.EventHandler(this.WinUAEBrowseButton_Click);
+            // 
+            // winUAEPathLabel
+            // 
+            this.winUAEPathLabel.AutoSize = true;
+            this.winUAEPathLabel.Location = new System.Drawing.Point(36, 55);
+            this.winUAEPathLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.winUAEPathLabel.Name = "winUAEPathLabel";
+            this.winUAEPathLabel.Size = new System.Drawing.Size(93, 17);
+            this.winUAEPathLabel.TabIndex = 35;
+            this.winUAEPathLabel.Text = "WinUAE Path";
+            // 
+            // winUAEPathTextBox
+            // 
+            this.winUAEPathTextBox.Location = new System.Drawing.Point(132, 53);
+            this.winUAEPathTextBox.Margin = new System.Windows.Forms.Padding(4);
+            this.winUAEPathTextBox.Name = "winUAEPathTextBox";
+            this.winUAEPathTextBox.Size = new System.Drawing.Size(254, 22);
+            this.winUAEPathTextBox.TabIndex = 36;
+            this.winUAEPathTextBox.TextChanged += new System.EventHandler(this.winUAEPathTextBox_TextChanged);
+            // 
+            // HelpTextBox
+            // 
+            this.HelpTextBox.BackColor = System.Drawing.SystemColors.Control;
+            this.HelpTextBox.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.HelpTextBox.Cursor = System.Windows.Forms.Cursors.Default;
+            this.HelpTextBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
+            this.HelpTextBox.ForeColor = System.Drawing.SystemColors.HotTrack;
+            this.HelpTextBox.Location = new System.Drawing.Point(16, 294);
+            this.HelpTextBox.Margin = new System.Windows.Forms.Padding(2);
+            this.HelpTextBox.Multiline = true;
+            this.HelpTextBox.Name = "HelpTextBox";
+            this.HelpTextBox.ReadOnly = true;
+            this.HelpTextBox.Size = new System.Drawing.Size(419, 99);
+            this.HelpTextBox.TabIndex = 41;
+            this.HelpTextBox.TabStop = false;
             // 
             // dirCacheTextBox
             // 
@@ -496,89 +587,35 @@
             this.retriesTextBox.Tag = "The default value is 32, min.0 - max.9999";
             this.retriesTextBox.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.textBox_HelpRequested);
             // 
-            // isoGroupBox
+            // PrirityListFile
             // 
-            this.isoGroupBox.Controls.Add(this.volumeSetIdTextBox);
-            this.isoGroupBox.Controls.Add(this.volumeIdTextBox);
-            this.isoGroupBox.Controls.Add(this.volumeIdLabel);
-            this.isoGroupBox.Controls.Add(this.imagePaddingLabel);
-            this.isoGroupBox.Controls.Add(this.imagePaddingComboBox);
-            this.isoGroupBox.Controls.Add(this.volSetIdLabel);
-            this.isoGroupBox.Controls.Add(this.publisherIdTextBox);
-            this.isoGroupBox.Controls.Add(this.applicationIdLabel);
-            this.isoGroupBox.Controls.Add(this.publisherIdLabel);
-            this.isoGroupBox.Controls.Add(this.applicationIdTextBox);
-            this.isoGroupBox.Controls.Add(this.dataPreparerIdTextBox);
-            this.isoGroupBox.Controls.Add(this.dataPreparerIdLabel);
-            this.isoGroupBox.Location = new System.Drawing.Point(443, 4);
-            this.isoGroupBox.Margin = new System.Windows.Forms.Padding(4);
-            this.isoGroupBox.Name = "isoGroupBox";
-            this.isoGroupBox.Padding = new System.Windows.Forms.Padding(4);
-            this.isoGroupBox.Size = new System.Drawing.Size(497, 287);
-            this.isoGroupBox.TabIndex = 19;
-            this.isoGroupBox.TabStop = false;
-            this.isoGroupBox.Text = "ISO";
+            this.PrirityListFile.AutoSize = true;
+            this.PrirityListFile.Location = new System.Drawing.Point(19, 86);
+            this.PrirityListFile.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.PrirityListFile.Name = "PrirityListFile";
+            this.PrirityListFile.Size = new System.Drawing.Size(111, 17);
+            this.PrirityListFile.TabIndex = 38;
+            this.PrirityListFile.Text = "Priority File Path";
             // 
-            // generalGroupBox
+            // priorityFilePathTextBox
             // 
-            this.generalGroupBox.Controls.Add(this.winUAEBrowseButton);
-            this.generalGroupBox.Controls.Add(this.winUAEPathLabel);
-            this.generalGroupBox.Controls.Add(this.winUAEPathTextBox);
-            this.generalGroupBox.Controls.Add(this.WinUAETestCheckBox);
-            this.generalGroupBox.Controls.Add(this.playSoundsCheckBox);
-            this.generalGroupBox.Location = new System.Drawing.Point(443, 301);
-            this.generalGroupBox.Margin = new System.Windows.Forms.Padding(4);
-            this.generalGroupBox.Name = "generalGroupBox";
-            this.generalGroupBox.Padding = new System.Windows.Forms.Padding(4);
-            this.generalGroupBox.Size = new System.Drawing.Size(497, 113);
-            this.generalGroupBox.TabIndex = 32;
-            this.generalGroupBox.TabStop = false;
-            this.generalGroupBox.Text = "General";
+            this.priorityFilePathTextBox.Location = new System.Drawing.Point(132, 83);
+            this.priorityFilePathTextBox.Margin = new System.Windows.Forms.Padding(4);
+            this.priorityFilePathTextBox.Name = "priorityFilePathTextBox";
+            this.priorityFilePathTextBox.Size = new System.Drawing.Size(254, 22);
+            this.priorityFilePathTextBox.TabIndex = 39;
+            this.priorityFilePathTextBox.TextChanged += new System.EventHandler(this.priorityFilePathTextBox_TextChanged);
             // 
-            // winUAEBrowseButton
+            // PriorityFileBrowseButton
             // 
-            this.winUAEBrowseButton.Location = new System.Drawing.Point(393, 69);
-            this.winUAEBrowseButton.Margin = new System.Windows.Forms.Padding(4);
-            this.winUAEBrowseButton.Name = "winUAEBrowseButton";
-            this.winUAEBrowseButton.Size = new System.Drawing.Size(100, 28);
-            this.winUAEBrowseButton.TabIndex = 37;
-            this.winUAEBrowseButton.Text = "Browse";
-            this.winUAEBrowseButton.UseVisualStyleBackColor = true;
-            this.winUAEBrowseButton.Click += new System.EventHandler(this.WinUAEBrowseButton_Click);
-            // 
-            // winUAEPathLabel
-            // 
-            this.winUAEPathLabel.AutoSize = true;
-            this.winUAEPathLabel.Location = new System.Drawing.Point(17, 75);
-            this.winUAEPathLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.winUAEPathLabel.Name = "winUAEPathLabel";
-            this.winUAEPathLabel.Size = new System.Drawing.Size(93, 17);
-            this.winUAEPathLabel.TabIndex = 35;
-            this.winUAEPathLabel.Text = "WinUAE Path";
-            // 
-            // winUAEPathTextBox
-            // 
-            this.winUAEPathTextBox.Location = new System.Drawing.Point(113, 71);
-            this.winUAEPathTextBox.Margin = new System.Windows.Forms.Padding(4);
-            this.winUAEPathTextBox.Name = "winUAEPathTextBox";
-            this.winUAEPathTextBox.Size = new System.Drawing.Size(277, 22);
-            this.winUAEPathTextBox.TabIndex = 36;
-            // 
-            // HelpTextBox
-            // 
-            this.HelpTextBox.BackColor = System.Drawing.SystemColors.Control;
-            this.HelpTextBox.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.HelpTextBox.Cursor = System.Windows.Forms.Cursors.Default;
-            this.HelpTextBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
-            this.HelpTextBox.ForeColor = System.Drawing.SystemColors.HotTrack;
-            this.HelpTextBox.Location = new System.Drawing.Point(16, 294);
-            this.HelpTextBox.Margin = new System.Windows.Forms.Padding(2);
-            this.HelpTextBox.Multiline = true;
-            this.HelpTextBox.Name = "HelpTextBox";
-            this.HelpTextBox.ReadOnly = true;
-            this.HelpTextBox.Size = new System.Drawing.Size(419, 99);
-            this.HelpTextBox.TabIndex = 41;
-            this.HelpTextBox.TabStop = false;
+            this.PriorityFileBrowseButton.Location = new System.Drawing.Point(388, 80);
+            this.PriorityFileBrowseButton.Margin = new System.Windows.Forms.Padding(4);
+            this.PriorityFileBrowseButton.Name = "PriorityFileBrowseButton";
+            this.PriorityFileBrowseButton.Size = new System.Drawing.Size(100, 28);
+            this.PriorityFileBrowseButton.TabIndex = 40;
+            this.PriorityFileBrowseButton.Text = "Browse";
+            this.PriorityFileBrowseButton.UseVisualStyleBackColor = true;
+            this.PriorityFileBrowseButton.Click += new System.EventHandler(this.PriorityFileBrowseButton_Click);
             // 
             // optionsForm
             // 
@@ -656,5 +693,8 @@
         System.Windows.Forms.TextBox winUAEPathTextBox;
         System.Windows.Forms.Button winUAEBrowseButton;
         private System.Windows.Forms.TextBox HelpTextBox;
+        private System.Windows.Forms.Button PriorityFileBrowseButton;
+        private System.Windows.Forms.TextBox priorityFilePathTextBox;
+        private System.Windows.Forms.Label PrirityListFile;
     }
 }
