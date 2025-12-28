@@ -44,7 +44,9 @@ namespace isocd_win {
             playSoundsCheckBox.Checked = _options.PlaySounds;
             WinUAETestCheckBox.Checked = _options.WinUAETest;
             winUAEPathTextBox.Text = _options.WinUAEPath;
-            priorityFilePathTextBox.Text = _options.PriorityListFilePath;
+
+            generateOrderFileCheckBox.Checked = _options.GenerateOrderFile;
+            useOrderFileCheckBox.Checked = _options.UseOrderFile && !_options.GenerateOrderFile;
         }
 
         void OkButton_Click(object sender, EventArgs e) {
@@ -71,9 +73,11 @@ namespace isocd_win {
             newOptions.PlaySounds = playSoundsCheckBox.Checked;
             newOptions.WinUAETest = WinUAETestCheckBox.Checked;
             newOptions.WinUAEPath = winUAEPathTextBox.Text;
-            newOptions.PriorityListFilePath = priorityFilePathTextBox.Text;
 
-            if(!newOptions.IsValid()) {
+            newOptions.GenerateOrderFile = generateOrderFileCheckBox.Checked;
+            newOptions.UseOrderFile = useOrderFileCheckBox.Checked;
+
+            if (!newOptions.IsValid()) {
                 MessageBox.Show(newOptions.ValidationResult().Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                 return;
             }
@@ -104,19 +108,6 @@ namespace isocd_win {
             }) {
                 if(fdlg.ShowDialog() == DialogResult.OK) {
                     winUAEPathTextBox.Text = fdlg.FileName;
-                }
-            }
-        }
-
-        private void PriorityFileBrowseButton_Click(object sender, EventArgs e)
-        {
-            using (var fdlg = new OpenFolderDialog())
-            {
-                fdlg.InitialFolder = Directory.GetCurrentDirectory();
-
-                if (fdlg.ShowDialog(this) == DialogResult.OK)
-                {
-                    priorityFilePathTextBox.Text = fdlg.Folder;
                 }
             }
         }
@@ -166,9 +157,19 @@ namespace isocd_win {
 
         }
 
-        private void priorityFilePathTextBox_TextChanged(object sender, EventArgs e)
+        private void playSoundsCheckBox_CheckedChanged(object sender, EventArgs e)
         {
 
+        }
+
+        private void useOrderFileCheckBox_CheckedChanged(object sender, EventArgs e)
+        {
+            generateOrderFileCheckBox.Checked = false;
+        }
+
+        private void generateOrderFileCheckBox_CheckedChanged(object sender, EventArgs e)
+        {
+            useOrderFileCheckBox.Checked = false;
         }
     }
 }

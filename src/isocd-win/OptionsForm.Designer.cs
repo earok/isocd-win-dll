@@ -60,14 +60,13 @@
             this.winUAEPathLabel = new System.Windows.Forms.Label();
             this.winUAEPathTextBox = new System.Windows.Forms.TextBox();
             this.HelpTextBox = new System.Windows.Forms.TextBox();
+            this.generateOrderFileCheckBox = new System.Windows.Forms.CheckBox();
+            this.useOrderFileCheckBox = new System.Windows.Forms.CheckBox();
             this.dirCacheTextBox = new isocd_win.ValueBox();
             this.dataCacheTextBox = new isocd_win.ValueBox();
             this.fileLockTextBox = new isocd_win.ValueBox();
             this.fileHandleTextBox = new isocd_win.ValueBox();
             this.retriesTextBox = new isocd_win.ValueBox();
-            this.PrirityListFile = new System.Windows.Forms.Label();
-            this.priorityFilePathTextBox = new System.Windows.Forms.TextBox();
-            this.PriorityFileBrowseButton = new System.Windows.Forms.Button();
             this.cdfsGroupBox.SuspendLayout();
             this.isoGroupBox.SuspendLayout();
             this.generalGroupBox.SuspendLayout();
@@ -265,13 +264,14 @@
             // playSoundsCheckBox
             // 
             this.playSoundsCheckBox.AutoSize = true;
-            this.playSoundsCheckBox.Location = new System.Drawing.Point(384, 23);
+            this.playSoundsCheckBox.Location = new System.Drawing.Point(8, 72);
             this.playSoundsCheckBox.Margin = new System.Windows.Forms.Padding(4);
             this.playSoundsCheckBox.Name = "playSoundsCheckBox";
             this.playSoundsCheckBox.Size = new System.Drawing.Size(109, 21);
             this.playSoundsCheckBox.TabIndex = 34;
             this.playSoundsCheckBox.Text = "Play Sounds";
             this.playSoundsCheckBox.UseVisualStyleBackColor = true;
+            this.playSoundsCheckBox.CheckedChanged += new System.EventHandler(this.playSoundsCheckBox_CheckedChanged);
             // 
             // volSetIdLabel
             // 
@@ -394,12 +394,12 @@
             // WinUAETestCheckBox
             // 
             this.WinUAETestCheckBox.AutoSize = true;
-            this.WinUAETestCheckBox.Location = new System.Drawing.Point(20, 23);
+            this.WinUAETestCheckBox.Location = new System.Drawing.Point(8, 100);
             this.WinUAETestCheckBox.Margin = new System.Windows.Forms.Padding(4);
             this.WinUAETestCheckBox.Name = "WinUAETestCheckBox";
-            this.WinUAETestCheckBox.Size = new System.Drawing.Size(142, 21);
+            this.WinUAETestCheckBox.Size = new System.Drawing.Size(18, 17);
             this.WinUAETestCheckBox.TabIndex = 33;
-            this.WinUAETestCheckBox.Text = "Test with WinUAE";
+            this.WinUAETestCheckBox.Tag = "Test with WinUAE";
             this.WinUAETestCheckBox.UseVisualStyleBackColor = true;
             // 
             // cdfsGroupBox
@@ -455,26 +455,25 @@
             // 
             // generalGroupBox
             // 
-            this.generalGroupBox.Controls.Add(this.PriorityFileBrowseButton);
-            this.generalGroupBox.Controls.Add(this.priorityFilePathTextBox);
-            this.generalGroupBox.Controls.Add(this.PrirityListFile);
+            this.generalGroupBox.Controls.Add(this.useOrderFileCheckBox);
+            this.generalGroupBox.Controls.Add(this.generateOrderFileCheckBox);
             this.generalGroupBox.Controls.Add(this.winUAEBrowseButton);
             this.generalGroupBox.Controls.Add(this.winUAEPathLabel);
             this.generalGroupBox.Controls.Add(this.winUAEPathTextBox);
             this.generalGroupBox.Controls.Add(this.WinUAETestCheckBox);
             this.generalGroupBox.Controls.Add(this.playSoundsCheckBox);
-            this.generalGroupBox.Location = new System.Drawing.Point(443, 301);
+            this.generalGroupBox.Location = new System.Drawing.Point(443, 294);
             this.generalGroupBox.Margin = new System.Windows.Forms.Padding(4);
             this.generalGroupBox.Name = "generalGroupBox";
             this.generalGroupBox.Padding = new System.Windows.Forms.Padding(4);
-            this.generalGroupBox.Size = new System.Drawing.Size(497, 113);
+            this.generalGroupBox.Size = new System.Drawing.Size(497, 128);
             this.generalGroupBox.TabIndex = 32;
             this.generalGroupBox.TabStop = false;
             this.generalGroupBox.Text = "General";
             // 
             // winUAEBrowseButton
             // 
-            this.winUAEBrowseButton.Location = new System.Drawing.Point(388, 50);
+            this.winUAEBrowseButton.Location = new System.Drawing.Point(389, 95);
             this.winUAEBrowseButton.Margin = new System.Windows.Forms.Padding(4);
             this.winUAEBrowseButton.Name = "winUAEBrowseButton";
             this.winUAEBrowseButton.Size = new System.Drawing.Size(100, 28);
@@ -486,7 +485,7 @@
             // winUAEPathLabel
             // 
             this.winUAEPathLabel.AutoSize = true;
-            this.winUAEPathLabel.Location = new System.Drawing.Point(36, 55);
+            this.winUAEPathLabel.Location = new System.Drawing.Point(29, 99);
             this.winUAEPathLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.winUAEPathLabel.Name = "winUAEPathLabel";
             this.winUAEPathLabel.Size = new System.Drawing.Size(93, 17);
@@ -495,7 +494,7 @@
             // 
             // winUAEPathTextBox
             // 
-            this.winUAEPathTextBox.Location = new System.Drawing.Point(132, 53);
+            this.winUAEPathTextBox.Location = new System.Drawing.Point(130, 98);
             this.winUAEPathTextBox.Margin = new System.Windows.Forms.Padding(4);
             this.winUAEPathTextBox.Name = "winUAEPathTextBox";
             this.winUAEPathTextBox.Size = new System.Drawing.Size(254, 22);
@@ -517,6 +516,30 @@
             this.HelpTextBox.Size = new System.Drawing.Size(419, 99);
             this.HelpTextBox.TabIndex = 41;
             this.HelpTextBox.TabStop = false;
+            // 
+            // generateOrderFileCheckBox
+            // 
+            this.generateOrderFileCheckBox.AutoSize = true;
+            this.generateOrderFileCheckBox.Location = new System.Drawing.Point(8, 23);
+            this.generateOrderFileCheckBox.Margin = new System.Windows.Forms.Padding(4);
+            this.generateOrderFileCheckBox.Name = "generateOrderFileCheckBox";
+            this.generateOrderFileCheckBox.Size = new System.Drawing.Size(150, 21);
+            this.generateOrderFileCheckBox.TabIndex = 38;
+            this.generateOrderFileCheckBox.Text = "Generate order file";
+            this.generateOrderFileCheckBox.UseVisualStyleBackColor = true;
+            this.generateOrderFileCheckBox.CheckedChanged += new System.EventHandler(this.generateOrderFileCheckBox_CheckedChanged);
+            // 
+            // useOrderFileCheckBox
+            // 
+            this.useOrderFileCheckBox.AutoSize = true;
+            this.useOrderFileCheckBox.Location = new System.Drawing.Point(8, 47);
+            this.useOrderFileCheckBox.Margin = new System.Windows.Forms.Padding(4);
+            this.useOrderFileCheckBox.Name = "useOrderFileCheckBox";
+            this.useOrderFileCheckBox.Size = new System.Drawing.Size(115, 21);
+            this.useOrderFileCheckBox.TabIndex = 39;
+            this.useOrderFileCheckBox.Text = "Use order file";
+            this.useOrderFileCheckBox.UseVisualStyleBackColor = true;
+            this.useOrderFileCheckBox.CheckedChanged += new System.EventHandler(this.useOrderFileCheckBox_CheckedChanged);
             // 
             // dirCacheTextBox
             // 
@@ -586,36 +609,6 @@
             this.retriesTextBox.TabIndex = 15;
             this.retriesTextBox.Tag = "The default value is 32, min.0 - max.9999";
             this.retriesTextBox.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.textBox_HelpRequested);
-            // 
-            // PrirityListFile
-            // 
-            this.PrirityListFile.AutoSize = true;
-            this.PrirityListFile.Location = new System.Drawing.Point(19, 86);
-            this.PrirityListFile.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.PrirityListFile.Name = "PrirityListFile";
-            this.PrirityListFile.Size = new System.Drawing.Size(111, 17);
-            this.PrirityListFile.TabIndex = 38;
-            this.PrirityListFile.Text = "Priority File Path";
-            // 
-            // priorityFilePathTextBox
-            // 
-            this.priorityFilePathTextBox.Location = new System.Drawing.Point(132, 83);
-            this.priorityFilePathTextBox.Margin = new System.Windows.Forms.Padding(4);
-            this.priorityFilePathTextBox.Name = "priorityFilePathTextBox";
-            this.priorityFilePathTextBox.Size = new System.Drawing.Size(254, 22);
-            this.priorityFilePathTextBox.TabIndex = 39;
-            this.priorityFilePathTextBox.TextChanged += new System.EventHandler(this.priorityFilePathTextBox_TextChanged);
-            // 
-            // PriorityFileBrowseButton
-            // 
-            this.PriorityFileBrowseButton.Location = new System.Drawing.Point(388, 80);
-            this.PriorityFileBrowseButton.Margin = new System.Windows.Forms.Padding(4);
-            this.PriorityFileBrowseButton.Name = "PriorityFileBrowseButton";
-            this.PriorityFileBrowseButton.Size = new System.Drawing.Size(100, 28);
-            this.PriorityFileBrowseButton.TabIndex = 40;
-            this.PriorityFileBrowseButton.Text = "Browse";
-            this.PriorityFileBrowseButton.UseVisualStyleBackColor = true;
-            this.PriorityFileBrowseButton.Click += new System.EventHandler(this.PriorityFileBrowseButton_Click);
             // 
             // optionsForm
             // 
@@ -693,8 +686,7 @@
         System.Windows.Forms.TextBox winUAEPathTextBox;
         System.Windows.Forms.Button winUAEBrowseButton;
         private System.Windows.Forms.TextBox HelpTextBox;
-        private System.Windows.Forms.Button PriorityFileBrowseButton;
-        private System.Windows.Forms.TextBox priorityFilePathTextBox;
-        private System.Windows.Forms.Label PrirityListFile;
+        private System.Windows.Forms.CheckBox useOrderFileCheckBox;
+        private System.Windows.Forms.CheckBox generateOrderFileCheckBox;
     }
 }

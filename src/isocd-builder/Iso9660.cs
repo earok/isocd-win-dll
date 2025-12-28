@@ -5,18 +5,23 @@ using System.Linq;
 using System.IO;
 
 #if !ACTUAL_RELEASE
-
 using System.IO.Abstractions;
-
 #else
-
 using FileInfoBase = System.IO.FileInfo;
 using _fileSystem = System.IO;
-
 #endif
 
 namespace isocd_builder
 {
+//new
+    class OrderValidationResult
+    {
+        public bool IsValid => Errors.Count == 0;
+        public List<string> Errors { get; } = new List<string>();
+        public List<string> Warnings { get; } = new List<string>();
+    }
+//new END
+
     /// <summary>
     /// This class provides the core functionality to produce an ISO 9660 file system ISO image compatible with AmigaDOS.
     /// </summary>
@@ -75,7 +80,8 @@ namespace isocd_builder
         /// <summary>
         /// Recursively scans a folder structure to find all files and directories present and generate appropriate records for the ISO 9660 filesystem.
         /// </summary>
-        void TreeScan(DirectoryQueueEntry parentDir, ushort parentDirectoryNumber, BuildIsoWorker worker)
+//old
+        /*void TreeScan(DirectoryQueueEntry parentDir, ushort parentDirectoryNumber, BuildIsoWorker worker)
         {
             var _parentDir = parentDir;
 
@@ -184,6 +190,236 @@ namespace isocd_builder
                 }
             }
         }
+        */
+//old END
+
+//new
+        void TreeScan(DirectoryQueueEntry parent, ushort parentDirNumber, BuildIsoWorker worker)
+        {
+            while (parent != null)
+            {
+                worker.Token.ThrowIfCancellationRequested();
+
+#if !ACTUAL_RELEASE
+                var dirInfo = _fileSystem.DirectoryInfo.New(parent.Path);
+#else
+                var dirInfo = new DirectoryInfo(parent.Path);
+#endif
+                var entries = dirInfo.EnumerateFileSystemInfos()
+                    .Select(f => CreateEntry(f, parent, parentDirNumber))
+                    .Where(e => e.Identifier != isocd_builder_constants.WINUAE_ATTRIBUTES_FILE)
+                    .Where(e => e.Name != ("ISOCD_" + options.VolumeId + ".txt"))
+                    .OrderBy(e => e.Type)
+                    .ThenBy(e => e.Path, StringComparer.OrdinalIgnoreCase)
+                    .ToList();
+
+                foreach (var e in entries)
+                {
+                    e.Index = indexCounter++;
+                    //fullEntries.Add(e);
+                }
+
+                fullEntries.AddRange(entries);
+
+                foreach (var d in entries.Where(e => e.Type == EntryType.Directory))
+                {
+                    dirQueue.Enqueue(new DirectoryQueueEntry { Path = d.Path, Index = d.Index });
+                }
+
+                parent = dirQueue.Count > 0 ? dirQueue.Dequeue() : null;
+                parentDirNumber++;
+            }
+        }
+#if !ACTUAL_RELEASE
+        Iso9660Entry CreateEntry(IFileSystemInfo f, DirectoryQueueEntry parent, ushort parentDirNumber)
+#else
+        Iso9660Entry CreateEntry(FileSystemInfo f, DirectoryQueueEntry parent, ushort parentDirNumber)
+#endif
+        {
+            var entry = new Iso9660Entry
+            {
+                ParentDirectoryIndex = parent.Index,
+                ParentDirectoryNumber = parentDirNumber,
+                Path = f.FullName,
+                Name = f.Name,
+                DateStamp = f.LastWriteTimeUtc
+            };
+
+            if (f is FileInfoBase)
+            {
+                entry.Type = EntryType.File;
+                entry.Size = ((FileInfoBase)f).Length;
+            }
+            else
+            {
+                entry.Type = EntryType.Directory;
+                entry.DirectoryNumber = ++directoryNumber;
+                entry.PathTableRecordSize =
+                    isocd_builder_constants.MINIMUM_PATH_TABLE_RECORD_SIZE +
+                    entry.Identifier.Length - 1 +
+                    ((entry.Identifier.Length & 1) == 1 ? 1 : 0);
+            }
+
+            entry.DirectoryRecordSize =
+                isocd_builder_constants.MINIMUM_DIR_RECORD_SIZE +
+                entry.Identifier.Length - 1 +
+                ((entry.Identifier.Length & 1) == 0 ? 1 : 0);
+
+            return entry;
+        }
+
+        // ----------------------------------------------------
+        // FILE ORDER (CD32)
+        // ----------------------------------------------------
+        void GenerateOrderFile(string path)
+        {
+            using (var sw = new StreamWriter(path, false, Encoding.UTF8))
+            {
+                sw.WriteLine("# ISO9660 CD32 FILE ORDER");
+                sw.WriteLine();
+
+                foreach (var e in fullEntries.Skip(1))
+                {
+                    var prefix = e.Type == EntryType.Directory ? "D:" : "F:";
+                    sw.WriteLine(prefix + GetIsoPath(e));
+                }
+            }
+        }
+
+        void ApplyOrderFile(string path)
+        {
+            var entry = new Iso9660Entry();
+
+            var order = File.ReadAllLines(path)
+                .Select(l => l.Trim())
+                .Where(l => l.Length > 0 && !l.StartsWith("#"))
+                .ToList();
+
+            var root = fullEntries[0];
+
+            var map = fullEntries.Skip(1)
+                .ToDictionary(
+                    e => (e.Type == EntryType.Directory ? "D:" : "F:") + GetIsoPath(e),
+                    e => e
+                );
+
+            var reordered = new List<Iso9660Entry>();
+
+            foreach (var k in order)
+                if (map.TryGetValue(k, out entry))
+                    reordered.Add(entry);
+
+            foreach (var e in map.Values)
+                if (!reordered.Contains(e))
+                    reordered.Add(e);
+
+            RebuildIndexes(root, reordered);
+        }
+
+        void RebuildIndexes(Iso9660Entry root, List<Iso9660Entry> reordered)
+        {
+            int p;
+            var indexMap = new Dictionary<int, int>();
+
+            fullEntries.Clear();
+            fullEntries.Add(root);
+
+            int idx = 1;
+            foreach (var e in reordered)
+            {
+                indexMap[e.Index] = idx;
+                e.Index = idx++;
+                fullEntries.Add(e);
+            }
+
+            foreach (var e in fullEntries.Skip(1))
+                if (indexMap.TryGetValue(e.ParentDirectoryIndex, out p))
+                    e.ParentDirectoryIndex = p;
+        }
+
+        string GetIsoPath(Iso9660Entry e)
+        {
+            var parts = new Stack<string>();
+            var cur = e;
+            while (cur.Index != 0)
+            {
+                parts.Push(cur.Name);
+                cur = fullEntries[cur.ParentDirectoryIndex];
+            }
+            return "/" + string.Join("/", parts);
+        }
+
+        OrderValidationResult ValidateOrderFile(string path)
+        {
+            var result = new OrderValidationResult();
+
+            if (!File.Exists(path))
+            {
+                result.Errors.Add($"Order file not found: {path}");
+                return result;
+            }
+
+            var lines = File.ReadAllLines(path)
+                .Select((l, i) => new { Line = l.Trim(), LineNo = i + 1 })
+                .Where(x => x.Line.Length > 0 && !x.Line.StartsWith("#"))
+                .ToList();
+
+            var seen = new HashSet<string>();
+
+            var isoMap = fullEntries
+                .Skip(1)
+                .ToDictionary(
+                    e => (e.Type == EntryType.Directory ? "D:" : "F:") + GetIsoPath(e),
+                    e => e
+                );
+
+            foreach (var l in lines)
+            {
+                if (!(l.Line.StartsWith("D:") || l.Line.StartsWith("F:")))
+                {
+                    result.Errors.Add($"Line {l.LineNo}: must start with D: or F:");
+                    continue;
+                }
+
+                if (l.Line.Length <= 2 || l.Line[2] != '/')
+                {
+                    result.Errors.Add($"Line {l.LineNo}: invalid ISO path");
+                    continue;
+                }
+
+                if (!seen.Add(l.Line))
+                {
+                    result.Errors.Add($"Line {l.LineNo}: duplicate entry '{l.Line}'");
+                    continue;
+                }
+
+                var entry = new Iso9660Entry();
+                if (!isoMap.TryGetValue(l.Line, out entry))
+                {
+                    result.Errors.Add($"Line {l.LineNo}: entry not found in ISO: {l.Line}");
+                    continue;
+                }
+
+                if (l.Line.StartsWith("D:") && entry.Type != EntryType.Directory)
+                {
+                    result.Errors.Add($"Line {l.LineNo}: expected DIRECTORY but found FILE: {l.Line}");
+                }
+
+                if (l.Line.StartsWith("F:") && entry.Type != EntryType.File)
+                {
+                    result.Errors.Add($"Line {l.LineNo}: expected FILE but found DIRECTORY: {l.Line}");
+                }
+            }
+
+            foreach (var k in isoMap.Keys)
+            {
+                if (!seen.Contains(k))
+                    result.Warnings.Add($"Missing entry in order file: {k}");
+            }
+
+            return result;
+        }
+//new END
 
         /// <summary>
         /// Gets the info for a file or directory from the source file system.
@@ -797,10 +1033,26 @@ namespace isocd_builder
             fullEntries.Clear();
             indexCounter = 0;
             directoryNumber = 1;
-
             var useTmFile = options.Trademark & !string.IsNullOrEmpty(options.TrademarkFile);
             byte[] tmBytes = null;
 
+//new
+            /*var root = new Iso9660Entry
+            {
+                Index = indexCounter++,
+                Type = EntryType.Directory,
+                ParentDirectoryNumber = 1,
+                DirectoryNumber = 1,
+                Path = options.InputFolder,
+                Name = "\x01"
+            };
+
+            fullEntries.Add(root);*/
+//new END
+
+
+
+//old
             // Add root record before we begin scanning
             var rootEntry = new Iso9660Entry
             {
@@ -814,12 +1066,46 @@ namespace isocd_builder
 
             GetEntryInfo(rootEntry);
             fullEntries.Add(rootEntry);
+//old END
 
+
+
+//old
             TreeScan(new DirectoryQueueEntry
             {
                 Path = rootEntry.Path,
                 Index = rootEntry.Index
             }, 1, worker);
+//old END
+
+//new
+            //TreeScan(new DirectoryQueueEntry { Path = root.Path, Index = root.Index }, 1, worker);
+
+            if (options.GenerateOrderFile)
+            {
+                GenerateOrderFile(options.InputFolder + '\\' + "ISOCD_" + options.VolumeId + ".txt");
+                //return;
+            }
+
+            if (options.UseOrderFile)
+            {
+                var validation = ValidateOrderFile(options.InputFolder + '\\' + "ISOCD_" + options.VolumeId + ".txt");
+
+                if (!validation.IsValid)
+                {
+                    throw new InvalidOperationException(
+                        "Order file validation failed:\n" +
+                        string.Join("\n", validation.Errors)
+                    );
+                }
+
+                foreach (var w in validation.Warnings)
+                    worker.ReportProgress(new WorkerUpdateStatus { StatusMessage = "Order warning: " + w });
+
+                ApplyOrderFile(options.InputFolder + '\\' + "ISOCD_" + options.VolumeId + ".txt");
+            }
+            //ApplyOrderFile(options.InputFolder + '\\' + "ISOCD_" + options.VolumeId + ".txt");
+//new END
 
             // Check provided input folder isn't empty
             if (fullEntries.Count() == 1)

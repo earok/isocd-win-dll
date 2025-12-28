@@ -20,8 +20,8 @@ namespace isocd_builder
 #endif
         readonly Options options;
 
-        readonly List<Iso9660Entry> fullEntries = new();
-        readonly Queue<DirectoryQueueEntry> dirQueue = new();
+        readonly List<Iso9660Entry> fullEntries = new List<Iso9660Entry>();
+        readonly Queue<DirectoryQueueEntry> dirQueue = new Queue<DirectoryQueueEntry>();
 
         int indexCounter;
         ushort directoryNumber = 1;
@@ -32,8 +32,17 @@ namespace isocd_builder
 
         public Iso9660(IFileSystem fileSystem, Options options)
         {
-            _fileSystem = fileSystem ?? throw new ArgumentNullException(nameof(fileSystem));
-            this.options = options ?? throw new ArgumentNullException(nameof(options));
+            if (fileSystem == null)
+            {
+                throw new NullReferenceException("The fileSystem object cannot be null.");
+            }
+
+            if (options == null)
+            {
+                throw new NullReferenceException("The options object cannot be null.");
+            }
+            _fileSystem = fileSystem;
+            this.options = options;
             _usingMockFileSystem = true;
         }
 #else
@@ -64,11 +73,15 @@ namespace isocd_builder
                     .ThenBy(e => e.Path, StringComparer.OrdinalIgnoreCase)
                     .ToList();
 
+                //entries.RemoveAll(e => e.Identifier == isocd_builder_constants.WINUAE_ATTRIBUTES_FILE);
+
                 foreach (var e in entries)
                 {
                     e.Index = indexCounter++;
-                    fullEntries.Add(e);
+                    //fullEntries.Add(e);
                 }
+
+                fullEntries.AddRange(entries);
 
                 foreach (var d in entries.Where(e => e.Type == EntryType.Directory))
                 {

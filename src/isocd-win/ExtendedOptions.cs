@@ -10,6 +10,10 @@ namespace isocd_win {
 
         public string WinUAEPath { get; set; }
 
+        //public bool GenerateOrderFile { get; set; }
+
+        //public bool UseOrderFile { get; set; }
+
         public ExtendedOptions() {
             RestoreDefaults();
         }
@@ -20,6 +24,8 @@ namespace isocd_win {
 
             PlaySounds = true;
             WinUAETest = false;
+            GenerateOrderFile = false;
+            UseOrderFile = false;
         }
     }
 }
