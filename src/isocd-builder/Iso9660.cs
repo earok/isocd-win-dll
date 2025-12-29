@@ -196,6 +196,8 @@ namespace isocd_builder
 //new
         void TreeScan(DirectoryQueueEntry parent, ushort parentDirNumber, BuildIsoWorker worker)
         {
+            var _parentDir = parent;
+
             while (parent != null)
             {
                 worker.Token.ThrowIfCancellationRequested();
@@ -206,7 +208,7 @@ namespace isocd_builder
                 var dirInfo = new DirectoryInfo(parent.Path);
 #endif
                 var entries = dirInfo.EnumerateFileSystemInfos()
-                    .Select(f => CreateEntry(f, parent, parentDirNumber))
+                    .Select(f => CreateEntry(f, parent, parentDirNumber, _parentDir))
                     .Where(e => e.Identifier != isocd_builder_constants.WINUAE_ATTRIBUTES_FILE)
                     .Where(e => e.Name != ("ISOCD_" + options.VolumeId + ".txt"))
                     .OrderBy(e => e.Type)
@@ -233,7 +235,7 @@ namespace isocd_builder
 #if !ACTUAL_RELEASE
         Iso9660Entry CreateEntry(IFileSystemInfo f, DirectoryQueueEntry parent, ushort parentDirNumber)
 #else
-        Iso9660Entry CreateEntry(FileSystemInfo f, DirectoryQueueEntry parent, ushort parentDirNumber)
+        Iso9660Entry CreateEntry(FileSystemInfo f, DirectoryQueueEntry parent, ushort parentDirNumber, DirectoryQueueEntry _parentDir)
 #endif
         {
             var entry = new Iso9660Entry
@@ -245,6 +247,13 @@ namespace isocd_builder
                 DateStamp = f.LastWriteTimeUtc
             };
 
+            string _rootSubdirectory = f.FullName.Replace(_parentDir.Path, "");
+
+            if (_rootSubdirectory.Count() > 255)
+            {
+                throw new InvalidOperationException(isocd_builder_constants.ERROR_MESSAGE_PATH_LENGTH_TO_LONG);
+            }
+
             if (f is FileInfoBase)
             {
                 entry.Type = EntryType.File;
@@ -252,6 +261,11 @@ namespace isocd_builder
             }
             else
             {
+                if (_rootSubdirectory.Count(testChar => testChar == '\\') > 8)
+                {
+                    throw new InvalidOperationException(isocd_builder_constants.ERROR_MESSAGE_SUBDIRECTORY_LIMIT_EXCEEDED);
+                }
+
                 entry.Type = EntryType.Directory;
                 entry.DirectoryNumber = ++directoryNumber;
                 entry.PathTableRecordSize =
@@ -1106,7 +1120,7 @@ namespace isocd_builder
                 ApplyOrderFile(options.InputFolder + '\\' + "ISOCD_" + options.VolumeId + ".txt");
             }
 
-GenerateOrderFile(options.InputFolder + '\\' + "ISOCD_" + options.VolumeId + "_output.txt");
+//GenerateOrderFile(options.InputFolder + '\\' + "ISOCD_" + options.VolumeId + "_output.txt"); //debbug
 
 //new END
 

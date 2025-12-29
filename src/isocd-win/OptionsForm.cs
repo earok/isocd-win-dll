@@ -165,12 +165,14 @@ namespace isocd_win {
 
         private void useOrderFileCheckBox_CheckedChanged(object sender, EventArgs e)
         {
-            generateOrderFileCheckBox.Checked = false;
+            if (useOrderFileCheckBox.Checked)
+                generateOrderFileCheckBox.Checked = false;
         }
 
         private void generateOrderFileCheckBox_CheckedChanged(object sender, EventArgs e)
         {
-            useOrderFileCheckBox.Checked = false;
+            if (generateOrderFileCheckBox.Checked)
+                useOrderFileCheckBox.Checked = false;
         }
 
         private void volumeIdTextBox_TextChanged(object sender, EventArgs e)
