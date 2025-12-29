@@ -17,7 +17,8 @@ ISOCD-Win is a C#/.NET Windows replacement for the native Amiga ISOCD applicatio
 * Uses ISO-8859-1 encoding just like AmigaDOS
 * Uses uppercase filenames in the generated ISO 9660 path table just like the original ISOCD (actual filenames are left intact) to make the ISO compatible with AmigaDOS
 * Uses a case insensitive sort for the file system entries based on path to make the ISO compatible with AmigaDOS
-* Supports image padding, which adds blank space at the start of the CDR-74 or CDR-80 image to improve the performance of double speed reading on the Amiga CD32 drive
+* Uses sorting via a generated text file with the contents, which can be edited to speed up reading the disc's contents.
+* Supports image padding, which adds blank space at the start of the CDR-74, CDR-80 or CDR-90 image to improve the performance of double speed reading on the Amiga CD32 drive
 * Building can be aborted mid-process if needed (multi-threaded)
 * Supports launching of WinUAE to test built ISO files before burning
 * The image building library is a self-contained assembly (DLL) and could easily be used in other .NET applications
