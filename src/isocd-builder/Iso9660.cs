@@ -361,13 +361,14 @@ namespace isocd_builder
 
             var lines = File.ReadAllLines(path)
                 .Select((l, i) => new { Line = l.Trim(), LineNo = i + 1 })
-                .Where(x => x.Line.Length > 0 && !x.Line.StartsWith("#"))
+                .Where(x => x.Line.Length > 0 && !x.Line.StartsWith("#") && !x.Line.Contains("ISOCD_" + options.VolumeId + "_output.txt"))
                 .ToList();
 
             var seen = new HashSet<string>();
 
             var isoMap = fullEntries
                 .Skip(1)
+                .Where(e => e.Name != ("ISOCD_" + options.VolumeId + "_output.txt"))
                 .ToDictionary(
                     e => (e.Type == EntryType.Directory ? "D:" : "F:") + GetIsoPath(e),
                     e => e
@@ -1084,7 +1085,7 @@ namespace isocd_builder
             if (options.GenerateOrderFile)
             {
                 GenerateOrderFile(options.InputFolder + '\\' + "ISOCD_" + options.VolumeId + ".txt");
-                //return;
+                return;
             }
 
             if (options.UseOrderFile)
@@ -1104,7 +1105,9 @@ namespace isocd_builder
 
                 ApplyOrderFile(options.InputFolder + '\\' + "ISOCD_" + options.VolumeId + ".txt");
             }
-            //ApplyOrderFile(options.InputFolder + '\\' + "ISOCD_" + options.VolumeId + ".txt");
+
+GenerateOrderFile(options.InputFolder + '\\' + "ISOCD_" + options.VolumeId + "_output.txt");
+
 //new END
 
             // Check provided input folder isn't empty

@@ -107,13 +107,14 @@ namespace isocd_builder {
         }
 
         public void ReportProgress(WorkerUpdateStatus reportProgressState) {
+
             reportProgressState.Progress = (int)((double)reportProgressState.CurrentEntry / reportProgressState.TotalEntries * 100.00);
 		
             var workerUpdatedEventArgs = new WorkerUpdateEventArgs {
                 State = reportProgressState
             };
 
-            if(asyncOperation != null) {
+            if (asyncOperation != null) {
                 // This call will be on the callers UI thread to ensure that updating the UI
                 // (e.g. progress bar etc) will not trigger an invalid cross-thread operation exception
                 asyncOperation.Post(progressReporter, workerUpdatedEventArgs);

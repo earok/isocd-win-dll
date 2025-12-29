@@ -124,7 +124,7 @@
     <value>ISO-9660 mandates that entries in a directory be sorted in ascending ASCII older. However, since it only allows upper-case file names, it doesn’t say how to sort filenames that contain lower-case. The Fast Directory Search option will stop searching a directory when it passes the point where the filename could be. However, for it to work, the directory must have been sorted.</value>
   </data>
   <data name="speedIndCheckBox.Tag" xml:space="preserve">
-    <value>CDTV uses a CD-ROM drive that reads in data at 150 KB/s. This option lets any future machine know that the application would be more than happy with faster reads. The 75hz timer within CDTV will always be available for easy timing  ontrol. We recommend you use this, it is CDTV_FRAMECALL with cdtv.device. This option defaults to off.</value>
+    <value>CDTV uses a CD-ROM drive that reads in data at 150 KB/s. This option lets any future machine know that the application would be more than happy with faster reads. The 75hz timer within CDTV will always be available for easy timing  control. We recommend you use this, it is CDTV_FRAMECALL with cdtv.device. This option defaults to off.</value>
   </data>
   <data name="publisherIdTextBox.Tag" xml:space="preserve">
     <value>This field shall specify an identification of the user who specified what shall be recorded on the volume group of which the volume is a member. Allowed 128 a-characters: A B C D E F G H I J K L M N O P Q R S T U V W X Y Z 0 1 2 3 4 5 6 7 8 9 _ ! " % &amp; ' ( ) * + , - . / : ; &lt; = &gt; ?</value>
@@ -135,15 +135,15 @@
   <data name="applicationIdTextBox.Tag" xml:space="preserve">
     <value>This field shall specify an identification of the specification of how the data are recorded on the volume group of which the volume is a member. Allowed 128 a-characters: A B C D E F G H I J K L M N O P Q R S T U V W X Y Z 0 1 2 3 4 5 6 7 8 9 _ ! " % &amp; ' ( ) * + , - . / : ; &lt; = &gt; ?</value>
   </data>
-  <metadata name="HelpTextBox.Locked" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-    <value>True</value>
-  </metadata>
   <data name="dirCacheTextBox.Tag" xml:space="preserve">
     <value>CDFS allocates a cache in which it saves the contents of directories it has read. This boosts performance if certain directories are read frequently. The size of this cache is specified in CD sectors (2K each). The default size is 16 blocks, min.2 - max.127.</value>
   </data>
   <data name="fileLockTextBox.Tag" xml:space="preserve">
     <value>CDFS pre-allocates a pool of Filelock structures which will be consumed as applications procure locks on files. The size of the pool is specified as the number of Filelock structures to pre-allocate. This will reduce memory fragmentation and slightly decrease access time. The default value is 40, min.1 - max.9999.</value>
   </data>
+  <metadata name="HelpTextBox.Locked" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>True</value>
+  </metadata>
   <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
   <data name="$this.Icon" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>

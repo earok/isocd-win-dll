@@ -59,10 +59,11 @@
             // 
             // startBuildButton
             // 
-            this.startBuildButton.Location = new System.Drawing.Point(285, 262);
+            this.startBuildButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
+            this.startBuildButton.Location = new System.Drawing.Point(285, 247);
             this.startBuildButton.Margin = new System.Windows.Forms.Padding(4);
             this.startBuildButton.Name = "startBuildButton";
-            this.startBuildButton.Size = new System.Drawing.Size(175, 27);
+            this.startBuildButton.Size = new System.Drawing.Size(175, 56);
             this.startBuildButton.TabIndex = 11;
             this.startBuildButton.Text = "Start Build";
             this.startBuildButton.UseVisualStyleBackColor = true;
@@ -100,12 +101,12 @@
             // authorLabel
             // 
             this.authorLabel.AutoSize = true;
-            this.authorLabel.Location = new System.Drawing.Point(557, 441);
+            this.authorLabel.Location = new System.Drawing.Point(461, 441);
             this.authorLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.authorLabel.Name = "authorLabel";
-            this.authorLabel.Size = new System.Drawing.Size(142, 17);
+            this.authorLabel.Size = new System.Drawing.Size(271, 17);
             this.authorLabel.TabIndex = 16;
-            this.authorLabel.Text = "«Ben Squibb - 2020»";
+            this.authorLabel.Text = "«Ben Squibb - 2020, Maciej Sees - 2025»";
             // 
             // srcBrowseButton
             // 
@@ -230,7 +231,7 @@
             // progressBar
             // 
             this.progressBar.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(153)))), ((int)(((byte)(180)))), ((int)(((byte)(209)))));
-            this.progressBar.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.progressBar.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.progressBar.Cursor = System.Windows.Forms.Cursors.Default;
             this.progressBar.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.progressBar.ForeColor = System.Drawing.Color.LightGreen;

@@ -56,12 +56,12 @@
             this.cdfsGroupBox = new System.Windows.Forms.GroupBox();
             this.isoGroupBox = new System.Windows.Forms.GroupBox();
             this.generalGroupBox = new System.Windows.Forms.GroupBox();
+            this.useOrderFileCheckBox = new System.Windows.Forms.CheckBox();
+            this.generateOrderFileCheckBox = new System.Windows.Forms.CheckBox();
             this.winUAEBrowseButton = new System.Windows.Forms.Button();
             this.winUAEPathLabel = new System.Windows.Forms.Label();
             this.winUAEPathTextBox = new System.Windows.Forms.TextBox();
             this.HelpTextBox = new System.Windows.Forms.TextBox();
-            this.generateOrderFileCheckBox = new System.Windows.Forms.CheckBox();
-            this.useOrderFileCheckBox = new System.Windows.Forms.CheckBox();
             this.dirCacheTextBox = new isocd_win.ValueBox();
             this.dataCacheTextBox = new isocd_win.ValueBox();
             this.fileLockTextBox = new isocd_win.ValueBox();
@@ -115,6 +115,7 @@
             this.volumeIdTextBox.TabIndex = 21;
             this.volumeIdTextBox.Tag = "This field shall specify an identification of the volume. Allowed 32 d-characters" +
     ": A B C D E F G H I J K L M N O P Q R S T U V W X Y Z 0 1 2 3 4 5 6 7 8 9 _";
+            this.volumeIdTextBox.TextChanged += new System.EventHandler(this.volumeIdTextBox_TextChanged);
             this.volumeIdTextBox.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.textBox_HelpRequested);
             this.volumeIdTextBox.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.D_Characters_check);
             // 
@@ -269,9 +270,11 @@
             this.playSoundsCheckBox.Name = "playSoundsCheckBox";
             this.playSoundsCheckBox.Size = new System.Drawing.Size(109, 21);
             this.playSoundsCheckBox.TabIndex = 34;
+            this.playSoundsCheckBox.Tag = "Play sounds after the event";
             this.playSoundsCheckBox.Text = "Play Sounds";
             this.playSoundsCheckBox.UseVisualStyleBackColor = true;
             this.playSoundsCheckBox.CheckedChanged += new System.EventHandler(this.playSoundsCheckBox_CheckedChanged);
+            this.playSoundsCheckBox.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.textBox_HelpRequested);
             // 
             // volSetIdLabel
             // 
@@ -399,8 +402,9 @@
             this.WinUAETestCheckBox.Name = "WinUAETestCheckBox";
             this.WinUAETestCheckBox.Size = new System.Drawing.Size(18, 17);
             this.WinUAETestCheckBox.TabIndex = 33;
-            this.WinUAETestCheckBox.Tag = "Test with WinUAE";
+            this.WinUAETestCheckBox.Tag = "Test ISO with WinUAE";
             this.WinUAETestCheckBox.UseVisualStyleBackColor = true;
+            this.WinUAETestCheckBox.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.textBox_HelpRequested);
             // 
             // cdfsGroupBox
             // 
@@ -471,6 +475,34 @@
             this.generalGroupBox.TabStop = false;
             this.generalGroupBox.Text = "General";
             // 
+            // useOrderFileCheckBox
+            // 
+            this.useOrderFileCheckBox.AutoSize = true;
+            this.useOrderFileCheckBox.Location = new System.Drawing.Point(8, 47);
+            this.useOrderFileCheckBox.Margin = new System.Windows.Forms.Padding(4);
+            this.useOrderFileCheckBox.Name = "useOrderFileCheckBox";
+            this.useOrderFileCheckBox.Size = new System.Drawing.Size(115, 21);
+            this.useOrderFileCheckBox.TabIndex = 33;
+            this.useOrderFileCheckBox.Tag = "Use order file";
+            this.useOrderFileCheckBox.Text = "Use order file";
+            this.useOrderFileCheckBox.UseVisualStyleBackColor = true;
+            this.useOrderFileCheckBox.CheckedChanged += new System.EventHandler(this.useOrderFileCheckBox_CheckedChanged);
+            this.useOrderFileCheckBox.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.textBox_HelpRequested);
+            // 
+            // generateOrderFileCheckBox
+            // 
+            this.generateOrderFileCheckBox.AutoSize = true;
+            this.generateOrderFileCheckBox.Location = new System.Drawing.Point(8, 23);
+            this.generateOrderFileCheckBox.Margin = new System.Windows.Forms.Padding(4);
+            this.generateOrderFileCheckBox.Name = "generateOrderFileCheckBox";
+            this.generateOrderFileCheckBox.Size = new System.Drawing.Size(150, 21);
+            this.generateOrderFileCheckBox.TabIndex = 32;
+            this.generateOrderFileCheckBox.Tag = "Generate order file";
+            this.generateOrderFileCheckBox.Text = "Generate order file";
+            this.generateOrderFileCheckBox.UseVisualStyleBackColor = true;
+            this.generateOrderFileCheckBox.CheckedChanged += new System.EventHandler(this.generateOrderFileCheckBox_CheckedChanged);
+            this.generateOrderFileCheckBox.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.textBox_HelpRequested);
+            // 
             // winUAEBrowseButton
             // 
             this.winUAEBrowseButton.Location = new System.Drawing.Point(389, 95);
@@ -478,9 +510,11 @@
             this.winUAEBrowseButton.Name = "winUAEBrowseButton";
             this.winUAEBrowseButton.Size = new System.Drawing.Size(100, 28);
             this.winUAEBrowseButton.TabIndex = 37;
+            this.winUAEBrowseButton.Tag = "Browse for WinUAE executable";
             this.winUAEBrowseButton.Text = "Browse";
             this.winUAEBrowseButton.UseVisualStyleBackColor = true;
             this.winUAEBrowseButton.Click += new System.EventHandler(this.WinUAEBrowseButton_Click);
+            this.winUAEBrowseButton.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.textBox_HelpRequested);
             // 
             // winUAEPathLabel
             // 
@@ -499,7 +533,9 @@
             this.winUAEPathTextBox.Name = "winUAEPathTextBox";
             this.winUAEPathTextBox.Size = new System.Drawing.Size(254, 22);
             this.winUAEPathTextBox.TabIndex = 36;
+            this.winUAEPathTextBox.Tag = "WinUAE executable path";
             this.winUAEPathTextBox.TextChanged += new System.EventHandler(this.winUAEPathTextBox_TextChanged);
+            this.winUAEPathTextBox.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.textBox_HelpRequested);
             // 
             // HelpTextBox
             // 
@@ -516,30 +552,6 @@
             this.HelpTextBox.Size = new System.Drawing.Size(419, 99);
             this.HelpTextBox.TabIndex = 41;
             this.HelpTextBox.TabStop = false;
-            // 
-            // generateOrderFileCheckBox
-            // 
-            this.generateOrderFileCheckBox.AutoSize = true;
-            this.generateOrderFileCheckBox.Location = new System.Drawing.Point(8, 23);
-            this.generateOrderFileCheckBox.Margin = new System.Windows.Forms.Padding(4);
-            this.generateOrderFileCheckBox.Name = "generateOrderFileCheckBox";
-            this.generateOrderFileCheckBox.Size = new System.Drawing.Size(150, 21);
-            this.generateOrderFileCheckBox.TabIndex = 38;
-            this.generateOrderFileCheckBox.Text = "Generate order file";
-            this.generateOrderFileCheckBox.UseVisualStyleBackColor = true;
-            this.generateOrderFileCheckBox.CheckedChanged += new System.EventHandler(this.generateOrderFileCheckBox_CheckedChanged);
-            // 
-            // useOrderFileCheckBox
-            // 
-            this.useOrderFileCheckBox.AutoSize = true;
-            this.useOrderFileCheckBox.Location = new System.Drawing.Point(8, 47);
-            this.useOrderFileCheckBox.Margin = new System.Windows.Forms.Padding(4);
-            this.useOrderFileCheckBox.Name = "useOrderFileCheckBox";
-            this.useOrderFileCheckBox.Size = new System.Drawing.Size(115, 21);
-            this.useOrderFileCheckBox.TabIndex = 39;
-            this.useOrderFileCheckBox.Text = "Use order file";
-            this.useOrderFileCheckBox.UseVisualStyleBackColor = true;
-            this.useOrderFileCheckBox.CheckedChanged += new System.EventHandler(this.useOrderFileCheckBox_CheckedChanged);
             // 
             // dirCacheTextBox
             // 
@@ -607,7 +619,8 @@
             this.retriesTextBox.Name = "retriesTextBox";
             this.retriesTextBox.Size = new System.Drawing.Size(140, 22);
             this.retriesTextBox.TabIndex = 15;
-            this.retriesTextBox.Tag = "The default value is 32, min.0 - max.9999";
+            this.retriesTextBox.Tag = "You can specify from 0 to 9999 retry attempts on read failures. The default value" +
+    " is 32.";
             this.retriesTextBox.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.textBox_HelpRequested);
             // 
             // optionsForm

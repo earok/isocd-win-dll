@@ -46,6 +46,7 @@ namespace isocd_win {
             winUAEPathTextBox.Text = _options.WinUAEPath;
 
             generateOrderFileCheckBox.Checked = _options.GenerateOrderFile;
+            generateOrderFileCheckBox.Tag = "Generate order file " + _options.InputFolder + @"\ISOCD_" + volumeIdTextBox.Text + ".txt";
             useOrderFileCheckBox.Checked = _options.UseOrderFile && !_options.GenerateOrderFile;
         }
 
@@ -170,6 +171,11 @@ namespace isocd_win {
         private void generateOrderFileCheckBox_CheckedChanged(object sender, EventArgs e)
         {
             useOrderFileCheckBox.Checked = false;
+        }
+
+        private void volumeIdTextBox_TextChanged(object sender, EventArgs e)
+        {
+            generateOrderFileCheckBox.Tag = "Generate order file " + _options.InputFolder + @"\ISOCD_" + volumeIdTextBox.Text + ".txt";
         }
     }
 }

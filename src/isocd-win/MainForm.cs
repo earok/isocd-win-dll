@@ -278,7 +278,7 @@ namespace isocd_win {
             }
             else {
                 progressBar.Value = e.State.Progress;
-                statusLabel.Text = $"Processing entry {e.State.CurrentEntry} of {e.State.TotalEntries}";
+                //statusLabel.Text = $"Processing entry {e.State.CurrentEntry} of {e.State.TotalEntries}";
             }
         }
 
