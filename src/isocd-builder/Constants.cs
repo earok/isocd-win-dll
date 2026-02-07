@@ -35,7 +35,7 @@ namespace isocd_builder {
         public const int MAX_SECTORS_CDR90 = 405000;
         public const int BIG_ENDIAN_PATH_TABLE_SECTOR = 19;
         public const int DIR_FLAG = 2;
-        public const int MINIMUM_PATH_TABLE_RECORD_SIZE = 9;
+        public const int MINIMUM_PATH_TABLE_RECORD_SIZE = 9; //9
         public const int MINIMUM_DIR_RECORD_SIZE = 34;
 
 		public const int COPYTO_BUF_SIZE = 1048576;

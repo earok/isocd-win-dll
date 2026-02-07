@@ -10,17 +10,17 @@ namespace isocd_builder {
         /// </summary>
         /// <param name="value">A 4 byte unsigned int.</param>
         /// <returns>A 8 byte both endian unsigned int.</returns>
-        public static UInt64 BothEndian(UInt32 value) {
-            UInt64 mask0 = 0xFF000000;
-            UInt64 mask1 = 0x00FF0000;
-            UInt64 mask2 = 0x0000FF00;
-            UInt64 mask3 = 0x000000FF;
+        public static ulong BothEndian(UInt32 value) {
+            ulong mask0 = 0xFF000000;
+            ulong mask1 = 0x00FF0000;
+            ulong mask2 = 0x0000FF00;
+            ulong mask3 = 0x000000FF;
 
-            return (UInt64)value |
-                   (UInt64)((value & mask0) << 8) |
-                   (UInt64)((value & mask1) << 24) |
-                   (UInt64)((value & mask2) << 40) |
-                   (UInt64)((value & mask3) << 56);
+            return (ulong)value |
+                   (ulong)((value & mask0) << 8) |
+                   (ulong)((value & mask1) << 24) |
+                   (ulong)((value & mask2) << 40) |
+                   (ulong)((value & mask3) << 56);
         }
 
         /// <summary>
@@ -28,13 +28,13 @@ namespace isocd_builder {
         /// </summary>
         /// <param name="value">A 2 byte unsigned int.</param>
         /// <returns>A 4 byte both endian unsigned int.</returns>
-        public static UInt32 BothEndian(UInt16 value) {
-            UInt32 mask0 = 0xFF00;
-            UInt32 mask1 = 0x00FF;
+        public static uint BothEndian(ushort value) {
+            uint mask0 = 0xFF00;
+            uint mask1 = 0x00FF;
 
-            return (UInt32)value |
-                   (UInt32)((value & mask0) << 8) |
-                   (UInt32)((value & mask1) << 24);
+            return (uint)value |
+                   (uint)((value & mask0) << 8) |
+                   (uint)((value & mask1) << 24);
         }
 
         /// <summary>
@@ -42,11 +42,11 @@ namespace isocd_builder {
         /// </summary>
         /// <param name="value"></param>
         /// <returns></returns>
-        public static UInt32 ChangeEndian(UInt32 value) {
-            UInt32 mask0 = 0xFF000000;
-            UInt32 mask1 = 0x00FF0000;
-            UInt32 mask2 = 0x0000FF00;
-            UInt32 mask3 = 0x000000FF;
+        public static uint ChangeEndian(uint value) {
+            uint mask0 = 0xFF000000;
+            uint mask1 = 0x00FF0000;
+            uint mask2 = 0x0000FF00;
+            uint mask3 = 0x000000FF;
 
             return ((value & mask0) >> 24) |
                    ((value & mask1) >> 8) |
@@ -59,8 +59,8 @@ namespace isocd_builder {
         /// </summary>
         /// <param name="value"></param>
         /// <returns></returns>
-        public static UInt16 ChangeEndian(UInt16 value) {
-            return (UInt16)((value >> 8) | (UInt16)((value & 0x00FF) << 8));
+        public static ushort ChangeEndian(ushort value) {
+            return (ushort)((value >> 8) | (ushort)((value & 0x00FF) << 8));
         }
     }
 }

@@ -80,120 +80,6 @@ namespace isocd_builder
         /// <summary>
         /// Recursively scans a folder structure to find all files and directories present and generate appropriate records for the ISO 9660 filesystem.
         /// </summary>
-//old
-        /*void TreeScan(DirectoryQueueEntry parentDir, ushort parentDirectoryNumber, BuildIsoWorker worker)
-        {
-            var _parentDir = parentDir;
-
-            while (parentDir != null)
-            {
-                worker.Token.ThrowIfCancellationRequested();
-
-                var entries = new List<Iso9660Entry>();
-
-#if !ACTUAL_RELEASE
-                var dirInfo = _fileSystem.DirectoryInfo.New(parentDir.Path);
-#else
-                var dirInfo = new DirectoryInfo(parentDir.Path);
-#endif
-
-                entries.AddRange(
-                    dirInfo.EnumerateFileSystemInfos()
-                    .Select(
-                        f =>
-                        {
-                            var entry = new Iso9660Entry
-                            {
-                                ParentDirectoryIndex = parentDir.Index,
-                                ParentDirectoryNumber = parentDirectoryNumber,
-                                Path = f.FullName,
-                                Name = f.Name,
-                                DateStamp = f.LastWriteTimeUtc
-                            };
-
-                            string _rootSubdirectory = f.FullName.Replace(_parentDir.Path, "");
-
-                            if (_rootSubdirectory.Count() > 255)
-                            {
-                                throw new InvalidOperationException(isocd_builder_constants.ERROR_MESSAGE_PATH_LENGTH_TO_LONG);
-                            }
-
-                            if (f is FileInfoBase)
-                            {
-                                entry.Type = EntryType.File;
-                                entry.Size = ((FileInfoBase)f).Length;
-                            }
-                            else
-                            {
-
-                                if (_rootSubdirectory.Count(testChar => testChar == '\\') > 8)
-                                {
-                                    throw new InvalidOperationException(isocd_builder_constants.ERROR_MESSAGE_SUBDIRECTORY_LIMIT_EXCEEDED);
-                                }
-
-                                entry.Type = EntryType.Directory;
-                                entry.DirectoryNumber = ++directoryNumber;
-
-                                // Calculate the path table record size for directories
-                                entry.PathTableRecordSize = isocd_builder_constants.MINIMUM_PATH_TABLE_RECORD_SIZE + (entry.Identifier.Length - 1);
-
-                                // Padding is only required if the entry identifier length is odd
-                                if ((entry.Identifier.Length & 1) == 1)
-                                {
-                                    entry.PathTableRecordSize++;
-                                }
-                            }
-
-                            // Calculate the ISO9660 directory record size for each entry
-                            entry.DirectoryRecordSize = isocd_builder_constants.MINIMUM_DIR_RECORD_SIZE + (entry.Identifier.Length - 1);
-
-                            // Padding is only required if the entry identifier length is even
-                            if ((entry.Identifier.Length & 1) == 0)
-                            {
-                                entry.DirectoryRecordSize++;
-                            }
-
-                            return entry;
-                        }
-                    )
-                );
-
-                // Remove any WinUAE attribute files
-                entries.RemoveAll(e => e.Identifier == isocd_builder_constants.WINUAE_ATTRIBUTES_FILE);
-
-                // ISOCD uses a case insensitive sort for the entries based on path
-                entries.Sort((x, y) => string.Compare(x.Path, y.Path, StringComparison.OrdinalIgnoreCase));
-
-                foreach (var entry in entries)
-                {
-                    // Now that the entries are sorted, set their correct indexes
-                    entry.Index = indexCounter++;
-                }
-
-                fullEntries.AddRange(entries);
-
-                foreach (var d in entries.Where(e => e.Type == EntryType.Directory))
-                {
-                    dirQueue.Enqueue(new DirectoryQueueEntry
-                    {
-                        Path = d.Path,
-                        Index = d.Index
-                    });
-                }
-
-                parentDir = null;
-
-                if (dirQueue.Count > 0)
-                {
-                    parentDirectoryNumber++;
-                    parentDir = dirQueue.Dequeue();
-                }
-            }
-        }
-        */
-//old END
-
-//new
         void TreeScan(DirectoryQueueEntry parent, ushort parentDirNumber, BuildIsoWorker worker)
         {
             var _parentDir = parent;
@@ -211,6 +97,7 @@ namespace isocd_builder
                     .Select(f => CreateEntry(f, parent, parentDirNumber, _parentDir))
                     .Where(e => e.Identifier != isocd_builder_constants.WINUAE_ATTRIBUTES_FILE)
                     .Where(e => e.Name != ("ISOCD_" + options.VolumeId + ".txt"))
+                    .Where(e => e.Name != ("ISOCD_" + options.VolumeId + "_dump.txt"))
                     .OrderBy(e => e.Type)
                     .ThenBy(e => e.Path, StringComparer.OrdinalIgnoreCase)
                     .ToList();
@@ -233,7 +120,7 @@ namespace isocd_builder
             }
         }
 #if !ACTUAL_RELEASE
-        Iso9660Entry CreateEntry(IFileSystemInfo f, DirectoryQueueEntry parent, ushort parentDirNumber)
+        Iso9660Entry CreateEntry(IFileSystemInfo f, DirectoryQueueEntry parent, ushort parentDirNumber, DirectoryQueueEntry _parentDir)
 #else
         Iso9660Entry CreateEntry(FileSystemInfo f, DirectoryQueueEntry parent, ushort parentDirNumber, DirectoryQueueEntry _parentDir)
 #endif
@@ -434,7 +321,6 @@ namespace isocd_builder
 
             return result;
         }
-//new END
 
         /// <summary>
         /// Gets the info for a file or directory from the source file system.
@@ -1051,23 +937,6 @@ namespace isocd_builder
             var useTmFile = options.Trademark & !string.IsNullOrEmpty(options.TrademarkFile);
             byte[] tmBytes = null;
 
-//new
-            /*var root = new Iso9660Entry
-            {
-                Index = indexCounter++,
-                Type = EntryType.Directory,
-                ParentDirectoryNumber = 1,
-                DirectoryNumber = 1,
-                Path = options.InputFolder,
-                Name = "\x01"
-            };
-
-            fullEntries.Add(root);*/
-//new END
-
-
-
-//old
             // Add root record before we begin scanning
             var rootEntry = new Iso9660Entry
             {
@@ -1081,20 +950,12 @@ namespace isocd_builder
 
             GetEntryInfo(rootEntry);
             fullEntries.Add(rootEntry);
-//old END
 
-
-
-//old
             TreeScan(new DirectoryQueueEntry
             {
                 Path = rootEntry.Path,
                 Index = rootEntry.Index
             }, 1, worker);
-//old END
-
-//new
-            //TreeScan(new DirectoryQueueEntry { Path = root.Path, Index = root.Index }, 1, worker);
 
             if (options.GenerateOrderFile)
             {
@@ -1119,10 +980,6 @@ namespace isocd_builder
 
                 ApplyOrderFile(options.InputFolder + '\\' + "ISOCD_" + options.VolumeId + ".txt");
             }
-
-//GenerateOrderFile(options.InputFolder + '\\' + "ISOCD_" + options.VolumeId + "_output.txt"); //debbug
-
-//new END
 
             // Check provided input folder isn't empty
             if (fullEntries.Count() == 1)
@@ -1171,6 +1028,32 @@ namespace isocd_builder
                 fullEntries.Sum(f => f.NumberOfSectors) +
                 // 32 sectors of padding (64kb) at the end of the image
                 32;
+
+//debbugger
+            using (var sw = new StreamWriter(options.InputFolder + '\\' + "ISOCD_" + options.VolumeId + "_dump.txt", false, Encoding.UTF8))
+            {
+                sw.WriteLine("# ISO9660 CD32 FILE DUMP");
+                sw.WriteLine();
+
+                foreach (var e in fullEntries)
+                {
+                    sw.WriteLine("Name: " + e.Name);
+                    sw.WriteLine("Path: " + e.Path);
+                    sw.WriteLine("Index: " + e.Index);
+                    sw.WriteLine("Identifier: " + e.Identifier);
+                    sw.WriteLine("Type: " + e.Type);
+                    sw.WriteLine("DirectoryNumber: " + e.DirectoryNumber);
+                    sw.WriteLine("DirectoryRecordSize: " + e.DirectoryRecordSize);
+                    sw.WriteLine("ParentDirectoryIndex: " + e.ParentDirectoryIndex);
+                    sw.WriteLine("ParentDirectoryNumber: " + e.ParentDirectoryNumber);
+                    sw.WriteLine("Size: " + e.Size);
+                    sw.WriteLine("StartingSector: " + e.StartingSector);
+                    sw.WriteLine("SectorAlignedSize: " + e.SectorAlignedSize);
+                    sw.WriteLine("NumberOfSectors: " + e.NumberOfSectors);
+                    sw.WriteLine("-----------------------------------------------------");
+                }
+            }
+//end of debbugger
 
             var maxSectors = 0;
 
@@ -1226,6 +1109,8 @@ namespace isocd_builder
                     entry.StartingSector += paddingSectors;
                 }
             }
+
+
 
             var pathTableLittleEndian = GeneratePathTable(true);
             var pathTableBigEndian = GeneratePathTable(false);
