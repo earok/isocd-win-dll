@@ -3,6 +3,7 @@ using System.Text;
 using System.Collections.Generic;
 using System.Linq;
 using System.IO;
+using System.Text.RegularExpressions;
 
 #if !ACTUAL_RELEASE
 using System.IO.Abstractions;
@@ -82,6 +83,10 @@ namespace isocd_builder
         /// </summary>
         void TreeScan(DirectoryQueueEntry parent, ushort parentDirNumber, BuildIsoWorker worker)
         {
+
+            //Encoding windowsEncoding = Encoding.GetEncoding(1250); // Windows-1250
+            //Encoding isoEncoding = Encoding.GetEncoding("ISO-8859-1");
+
             var _parentDir = parent;
 
             while (parent != null)
@@ -105,7 +110,20 @@ namespace isocd_builder
                 foreach (var e in entries)
                 {
                     e.Index = indexCounter++;
-                    //fullEntries.Add(e);
+
+                    bool isValid = Regex.IsMatch(e.Name, @"^[a-zA-Z0-9 ()!_.+\-\[\]\{\}&#$@]+$");
+                    if (!isValid)
+                        throw new InvalidOperationException(
+                        isocd_builder_constants.ERROR_MESSAGE_ILLEGAL_CHARACTER +
+                        e.Path
+                        );
+
+
+                    //if (e.Name.Contains("espa"))
+                    //    ;
+
+                    //byte[] windowsBytes = windowsEncoding.GetBytes(e.Name);
+                    //e.Name = isoEncoding.GetString(windowsBytes);
                 }
 
                 fullEntries.AddRange(entries);
@@ -119,6 +137,19 @@ namespace isocd_builder
                 parentDirNumber++;
             }
         }
+
+        public static string ReplaceInvalidChars(string input)
+        {
+            StringBuilder sb = new StringBuilder();
+
+            foreach (char c in input)
+            {
+                sb.Append(char.IsLetterOrDigit(c) ? c : '_');
+            }
+
+            return sb.ToString();
+        }
+
 #if !ACTUAL_RELEASE
         Iso9660Entry CreateEntry(IFileSystemInfo f, DirectoryQueueEntry parent, ushort parentDirNumber, DirectoryQueueEntry _parentDir)
 #else
@@ -970,7 +1001,7 @@ namespace isocd_builder
                 if (!validation.IsValid)
                 {
                     throw new InvalidOperationException(
-                        "Order file validation failed:\n" +
+                        isocd_builder_constants.VALIDATION_ORDER_FILE_FAILED +
                         string.Join("\n", validation.Errors)
                     );
                 }
@@ -1030,7 +1061,7 @@ namespace isocd_builder
                 32;
 
 //debbugger
-            using (var sw = new StreamWriter(options.InputFolder + '\\' + "ISOCD_" + options.VolumeId + "_dump.txt", false, Encoding.UTF8))
+            /*using (var sw = new StreamWriter(options.InputFolder + '\\' + "ISOCD_" + options.VolumeId + "_dump.txt", false, Encoding.UTF8))
             {
                 sw.WriteLine("# ISO9660 CD32 FILE DUMP");
                 sw.WriteLine();
@@ -1039,20 +1070,57 @@ namespace isocd_builder
                 {
                     sw.WriteLine("Name: " + e.Name);
                     sw.WriteLine("Path: " + e.Path);
-                    sw.WriteLine("Index: " + e.Index);
                     sw.WriteLine("Identifier: " + e.Identifier);
                     sw.WriteLine("Type: " + e.Type);
-                    sw.WriteLine("DirectoryNumber: " + e.DirectoryNumber);
-                    sw.WriteLine("DirectoryRecordSize: " + e.DirectoryRecordSize);
-                    sw.WriteLine("ParentDirectoryIndex: " + e.ParentDirectoryIndex);
-                    sw.WriteLine("ParentDirectoryNumber: " + e.ParentDirectoryNumber);
-                    sw.WriteLine("Size: " + e.Size);
-                    sw.WriteLine("StartingSector: " + e.StartingSector);
-                    sw.WriteLine("SectorAlignedSize: " + e.SectorAlignedSize);
+
+                    sw.WriteLine("Index   : " + e.Index);
+                    byte[] bytes = BitConverter.GetBytes(e.Index);
+                    //string hexLittle = BitConverter.ToString(bytes).Replace("-", "");
+                    string hexBig = BitConverter.ToString(bytes.Reverse().ToArray()).Replace("-", "");
+                    sw.WriteLine("Index 0x: " + hexBig);
+
+                    sw.WriteLine("DirectoryNumber   : " + e.DirectoryNumber);
+                    bytes = BitConverter.GetBytes(e.DirectoryNumber);
+                    hexBig = BitConverter.ToString(bytes.Reverse().ToArray()).Replace("-", "");
+                    sw.WriteLine("DirectoryNumber 0x: " + hexBig);
+
+                    sw.WriteLine("ParentDirectoryIndex   : " + e.ParentDirectoryIndex);
+                    bytes = BitConverter.GetBytes(e.ParentDirectoryIndex);
+                    hexBig = BitConverter.ToString(bytes.Reverse().ToArray()).Replace("-", "");
+                    sw.WriteLine("ParentDirectoryIndex 0x: " + hexBig);
+
+                    sw.WriteLine("ParentDirectoryNumber   : " + e.ParentDirectoryNumber);
+                    bytes = BitConverter.GetBytes(e.ParentDirectoryNumber);
+                    hexBig = BitConverter.ToString(bytes.Reverse().ToArray()).Replace("-", "");
+                    sw.WriteLine("ParentDirectoryNumber 0x: " + hexBig);
+
+                    sw.WriteLine("DirectoryRecordSize   : " + e.DirectoryRecordSize);
+                    bytes = BitConverter.GetBytes(e.DirectoryRecordSize);
+                    hexBig = BitConverter.ToString(bytes.Reverse().ToArray()).Replace("-", "");
+                    sw.WriteLine("DirectoryRecordSize 0x: " + hexBig);
+
+                    sw.WriteLine("StartingSector   : " + e.StartingSector);
+                    bytes = BitConverter.GetBytes(e.StartingSector);
+                    hexBig = BitConverter.ToString(bytes.Reverse().ToArray()).Replace("-", "");
+                    sw.WriteLine("StartingSector 0x: " + hexBig);
+
                     sw.WriteLine("NumberOfSectors: " + e.NumberOfSectors);
+                    bytes = BitConverter.GetBytes(e.NumberOfSectors);
+                    hexBig = BitConverter.ToString(bytes.Reverse().ToArray()).Replace("-", "");
+                    sw.WriteLine("NumberOfSectors 0x: " + hexBig);
+
+                    sw.WriteLine("SectorAlignedSize   : " + e.SectorAlignedSize);
+                    bytes = BitConverter.GetBytes(e.SectorAlignedSize);
+                    hexBig = BitConverter.ToString(bytes.Reverse().ToArray()).Replace("-", "");
+                    sw.WriteLine("SectorAlignedSize 0x: " + hexBig);
+
+                    sw.WriteLine("Size   : " + e.Size);
+                    bytes = BitConverter.GetBytes(e.Size);
+                    hexBig = BitConverter.ToString(bytes.Reverse().ToArray()).Replace("-", "");
+                    sw.WriteLine("Size 0x: " + hexBig);
                     sw.WriteLine("-----------------------------------------------------");
                 }
-            }
+            }*/
 //end of debbugger
 
             var maxSectors = 0;
