@@ -41,6 +41,7 @@
             this.targetSystemSettingsLabel = new System.Windows.Forms.Label();
             this.buildStatusGroupBox = new System.Windows.Forms.Panel();
             this.buildStatusLabel = new System.Windows.Forms.Label();
+            this.GenerateOrderFileButton = new System.Windows.Forms.Button();
             this.progressBar = new isocd_win.ProgressBar();
             ((System.ComponentModel.ISupportInitialize)(this.targetSystemPictureBox)).BeginInit();
             this.targetSystemGroupBox.SuspendLayout();
@@ -60,10 +61,10 @@
             // startBuildButton
             // 
             this.startBuildButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
-            this.startBuildButton.Location = new System.Drawing.Point(285, 247);
+            this.startBuildButton.Location = new System.Drawing.Point(372, 247);
             this.startBuildButton.Margin = new System.Windows.Forms.Padding(4);
             this.startBuildButton.Name = "startBuildButton";
-            this.startBuildButton.Size = new System.Drawing.Size(175, 56);
+            this.startBuildButton.Size = new System.Drawing.Size(220, 56);
             this.startBuildButton.TabIndex = 11;
             this.startBuildButton.Text = "Start Build";
             this.startBuildButton.UseVisualStyleBackColor = true;
@@ -134,11 +135,11 @@
             // 
             this.statusLabel.BackColor = System.Drawing.SystemColors.Control;
             this.statusLabel.ForeColor = System.Drawing.Color.Blue;
-            this.statusLabel.Location = new System.Drawing.Point(-1, 11);
+            this.statusLabel.Location = new System.Drawing.Point(-1, 0);
             this.statusLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.statusLabel.MinimumSize = new System.Drawing.Size(440, 5);
             this.statusLabel.Name = "statusLabel";
-            this.statusLabel.Size = new System.Drawing.Size(658, 31);
+            this.statusLabel.Size = new System.Drawing.Size(658, 54);
             this.statusLabel.TabIndex = 14;
             this.statusLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
@@ -215,7 +216,7 @@
             this.buildStatusGroupBox.Location = new System.Drawing.Point(41, 367);
             this.buildStatusGroupBox.Margin = new System.Windows.Forms.Padding(4);
             this.buildStatusGroupBox.Name = "buildStatusGroupBox";
-            this.buildStatusGroupBox.Size = new System.Drawing.Size(658, 52);
+            this.buildStatusGroupBox.Size = new System.Drawing.Size(658, 56);
             this.buildStatusGroupBox.TabIndex = 13;
             // 
             // buildStatusLabel
@@ -227,6 +228,18 @@
             this.buildStatusLabel.Size = new System.Drawing.Size(83, 17);
             this.buildStatusLabel.TabIndex = 12;
             this.buildStatusLabel.Text = "Build Status";
+            // 
+            // GenerateOrderFileButton
+            // 
+            this.GenerateOrderFileButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
+            this.GenerateOrderFileButton.Location = new System.Drawing.Point(119, 247);
+            this.GenerateOrderFileButton.Margin = new System.Windows.Forms.Padding(4);
+            this.GenerateOrderFileButton.Name = "GenerateOrderFileButton";
+            this.GenerateOrderFileButton.Size = new System.Drawing.Size(220, 56);
+            this.GenerateOrderFileButton.TabIndex = 17;
+            this.GenerateOrderFileButton.Text = "Generate order file";
+            this.GenerateOrderFileButton.UseVisualStyleBackColor = true;
+            this.GenerateOrderFileButton.Click += new System.EventHandler(this.GenerateOrderFileButton_Click);
             // 
             // progressBar
             // 
@@ -248,6 +261,7 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(745, 479);
+            this.Controls.Add(this.GenerateOrderFileButton);
             this.Controls.Add(this.buildStatusLabel);
             this.Controls.Add(this.targetSystemSettingsLabel);
             this.Controls.Add(this.buildStatusGroupBox);
@@ -303,6 +317,7 @@
         private System.Windows.Forms.Panel buildStatusGroupBox;
         private System.Windows.Forms.Label targetSystemSettingsLabel;
         private System.Windows.Forms.Label buildStatusLabel;
+        private System.Windows.Forms.Button GenerateOrderFileButton;
     }
 }
 

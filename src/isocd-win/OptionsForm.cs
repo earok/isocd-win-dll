@@ -45,8 +45,6 @@ namespace isocd_win {
             WinUAETestCheckBox.Checked = _options.WinUAETest;
             winUAEPathTextBox.Text = _options.WinUAEPath;
 
-            generateOrderFileCheckBox.Checked = _options.GenerateOrderFile;
-            generateOrderFileCheckBox.Tag = "Generate order file " + _options.InputFolder + @"\ISOCD_" + volumeIdTextBox.Text + ".txt";
             useOrderFileCheckBox.Checked = _options.UseOrderFile && !_options.GenerateOrderFile;
         }
 
@@ -75,7 +73,6 @@ namespace isocd_win {
             newOptions.WinUAETest = WinUAETestCheckBox.Checked;
             newOptions.WinUAEPath = winUAEPathTextBox.Text;
 
-            newOptions.GenerateOrderFile = generateOrderFileCheckBox.Checked;
             newOptions.UseOrderFile = useOrderFileCheckBox.Checked;
 
             if (!newOptions.IsValid()) {
@@ -166,18 +163,7 @@ namespace isocd_win {
         private void useOrderFileCheckBox_CheckedChanged(object sender, EventArgs e)
         {
             if (useOrderFileCheckBox.Checked)
-                generateOrderFileCheckBox.Checked = false;
-        }
-
-        private void generateOrderFileCheckBox_CheckedChanged(object sender, EventArgs e)
-        {
-            if (generateOrderFileCheckBox.Checked)
-                useOrderFileCheckBox.Checked = false;
-        }
-
-        private void volumeIdTextBox_TextChanged(object sender, EventArgs e)
-        {
-            generateOrderFileCheckBox.Tag = "Generate order file " + _options.InputFolder + @"\ISOCD_" + volumeIdTextBox.Text + ".txt";
+                _options.GenerateOrderFile = false;
         }
     }
 }

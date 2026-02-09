@@ -96,6 +96,9 @@ namespace isocd_win {
         }
 
         async void StartBuildButton_Click(object sender, EventArgs e) {
+
+            configManager.Options.GenerateOrderFile = false;
+
             statusLabel.ForeColor = Color.Blue;
 
             if(appState == AppStates.BuildingIso) {
@@ -106,7 +109,10 @@ namespace isocd_win {
                 return;
             }
 
-            if(string.IsNullOrWhiteSpace(srcTextBox.Text) || string.IsNullOrWhiteSpace(imgTextBox.Text)) {
+            if (!checkEnteredParameters())
+                return;
+
+            /*if (string.IsNullOrWhiteSpace(srcTextBox.Text) || string.IsNullOrWhiteSpace(imgTextBox.Text)) {
                 ShowError(MUST_SELECT_SOURCE_AND_IMAGE_ERROR_MESSAGE);
                 return;
             }
@@ -119,7 +125,7 @@ namespace isocd_win {
             if(!Directory.Exists(Path.GetDirectoryName(imgTextBox.Text))) {
                 ShowError(IMAGE_MUST_BE_VALID_ERROR_MESSAGE);
                 return;
-            }
+            }*/
 
             if(File.Exists(imgTextBox.Text)) {
                 if(ShowWarning(string.Format(OVERWRITE_ISO_WARNING_MESSAGE, imgTextBox.Text)) == DialogResult.No) {
@@ -127,13 +133,13 @@ namespace isocd_win {
                 }
             }
 
-            SetAppState(AppStates.BuildingIso);
+            /*SetAppState(AppStates.BuildingIso);
             UpdateConfigFromForm();
 
             if(!configManager.Options.IsValid()) {
                 MessageBox.Show(configManager.Options.ValidationResult().Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                 return;
-            }
+            }*/
 
             await worker.StartWorkAsync(configManager.Options);
 
@@ -368,6 +374,53 @@ namespace isocd_win {
             e.Handled = true;
 
             base.OnKeyPress(e);
+        }
+
+        async private void GenerateOrderFileButton_Click(object sender, EventArgs e)
+        {
+            if (!checkEnteredParameters())
+                return;
+
+            configManager.Options.GenerateOrderFile = true;
+            configManager.Options.UseOrderFile = false;
+
+            await worker.StartWorkAsync(configManager.Options);
+
+            SetAppState(AppStates.Idle);
+
+            // generateOrderFileCheckBox.Tag = "Generate order file " + _options.InputFolder + @"\ISOCD_" + volumeIdTextBox.Text + ".txt";
+        }
+
+        private bool checkEnteredParameters()
+        {
+            if (string.IsNullOrWhiteSpace(srcTextBox.Text) || string.IsNullOrWhiteSpace(imgTextBox.Text))
+            {
+                ShowError(MUST_SELECT_SOURCE_AND_IMAGE_ERROR_MESSAGE);
+                return false;
+            }
+
+            if (!Directory.Exists(srcTextBox.Text))
+            {
+                ShowError(SOURCE_MUST_BE_VALID_ERROR_MESSAGE);
+                return false;
+            }
+
+            if (!Directory.Exists(Path.GetDirectoryName(imgTextBox.Text)))
+            {
+                ShowError(IMAGE_MUST_BE_VALID_ERROR_MESSAGE);
+                return false;
+            }
+
+            SetAppState(AppStates.BuildingIso);
+            UpdateConfigFromForm();
+
+            if (!configManager.Options.IsValid())
+            {
+                MessageBox.Show(configManager.Options.ValidationResult().Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                return false;
+            }
+
+             return true;
         }
     }
 }

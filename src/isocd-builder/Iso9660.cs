@@ -102,6 +102,7 @@ namespace isocd_builder
                     .Select(f => CreateEntry(f, parent, parentDirNumber, _parentDir))
                     .Where(e => e.Identifier != isocd_builder_constants.WINUAE_ATTRIBUTES_FILE)
                     .Where(e => e.Name != ("ISOCD_" + options.VolumeId + ".txt"))
+                    .Where(e => e.Name != ("ISOCD_" + options.VolumeId + ".log"))
                     .Where(e => e.Name != ("ISOCD_" + options.VolumeId + "_dump.txt"))
                     .OrderBy(e => e.Type)
                     .ThenBy(e => e.Path, StringComparer.OrdinalIgnoreCase)
@@ -111,16 +112,12 @@ namespace isocd_builder
                 {
                     e.Index = indexCounter++;
 
-                    bool isValid = Regex.IsMatch(e.Name, @"^[a-zA-Z0-9 ()!_.+\-\[\]\{\}&#$@]+$");
+                    bool isValid = Regex.IsMatch(e.Name, @"^[a-zA-Z0-9 ()!_.+\-\[\]\{\}&#$@]+$"); //allowed chars
                     if (!isValid)
                         throw new InvalidOperationException(
                         isocd_builder_constants.ERROR_MESSAGE_ILLEGAL_CHARACTER +
                         e.Path
                         );
-
-
-                    //if (e.Name.Contains("espa"))
-                    //    ;
 
                     //byte[] windowsBytes = windowsEncoding.GetBytes(e.Name);
                     //e.Name = isoEncoding.GetString(windowsBytes);
@@ -207,7 +204,7 @@ namespace isocd_builder
         {
             using (var sw = new StreamWriter(path, false, Encoding.UTF8))
             {
-                sw.WriteLine("# ISO9660 CD32 FILE ORDER");
+                sw.WriteLine("# ISO9660 CD32 ORDER FILE");
                 sw.WriteLine();
 
                 foreach (var e in fullEntries.Skip(1))
@@ -215,6 +212,14 @@ namespace isocd_builder
                     var prefix = e.Type == EntryType.Directory ? "D:" : "F:";
                     sw.WriteLine(prefix + GetIsoPath(e));
                 }
+            }
+        }
+
+        void WriteOrderFileLog(string path, string warningInfo)
+        {
+            using (var sw = new StreamWriter(path, true, Encoding.UTF8))
+            {
+                sw.WriteLine(warningInfo);
             }
         }
 
@@ -287,7 +292,7 @@ namespace isocd_builder
 
             if (!File.Exists(path))
             {
-                result.Errors.Add($"Order file not found: {path}");
+                result.Errors.Add("ERROR   " + DateTime.Now + " " + $"Order file not found: {path}");
                 return result;
             }
 
@@ -310,44 +315,44 @@ namespace isocd_builder
             {
                 if (!(l.Line.StartsWith("D:") || l.Line.StartsWith("F:")))
                 {
-                    result.Errors.Add($"Line {l.LineNo}: must start with D: or F:");
+                    result.Errors.Add("ERROR   " + DateTime.Now + " " + $"Line {l.LineNo}: must start with D: or F:");
                     continue;
                 }
 
                 if (l.Line.Length <= 2 || l.Line[2] != '/')
                 {
-                    result.Errors.Add($"Line {l.LineNo}: invalid ISO path");
+                    result.Errors.Add("ERROR   " + DateTime.Now + " " + $"Line {l.LineNo}: invalid ISO path");
                     continue;
                 }
 
                 if (!seen.Add(l.Line))
                 {
-                    result.Errors.Add($"Line {l.LineNo}: duplicate entry '{l.Line}'");
+                    result.Errors.Add("ERROR   " + DateTime.Now + " " + $"Line {l.LineNo}: duplicate entry '{l.Line}'");
                     continue;
                 }
 
                 var entry = new Iso9660Entry();
                 if (!isoMap.TryGetValue(l.Line, out entry))
                 {
-                    result.Errors.Add($"Line {l.LineNo}: entry not found in ISO: {l.Line}");
+                    result.Errors.Add("ERROR   " + DateTime.Now + " " + $"Line {l.LineNo}: entry not found in ISO: {l.Line}");
                     continue;
                 }
 
                 if (l.Line.StartsWith("D:") && entry.Type != EntryType.Directory)
                 {
-                    result.Errors.Add($"Line {l.LineNo}: expected DIRECTORY but found FILE: {l.Line}");
+                    result.Errors.Add("ERROR   " + DateTime.Now + " " + $"Line {l.LineNo}: expected DIRECTORY but found FILE: {l.Line}");
                 }
 
                 if (l.Line.StartsWith("F:") && entry.Type != EntryType.File)
                 {
-                    result.Errors.Add($"Line {l.LineNo}: expected FILE but found DIRECTORY: {l.Line}");
+                    result.Errors.Add("ERROR   " + DateTime.Now + " " + $"Line {l.LineNo}: expected FILE but found DIRECTORY: {l.Line}");
                 }
             }
 
             foreach (var k in isoMap.Keys)
             {
                 if (!seen.Contains(k))
-                    result.Warnings.Add($"Missing entry in order file: {k}");
+                    result.Warnings.Add("WARNING " + DateTime.Now + " " + $"Missing entry in order file: {k}");
             }
 
             return result;
@@ -1000,14 +1005,17 @@ namespace isocd_builder
 
                 if (!validation.IsValid)
                 {
-                    throw new InvalidOperationException(
-                        isocd_builder_constants.VALIDATION_ORDER_FILE_FAILED +
-                        string.Join("\n", validation.Errors)
-                    );
+                    WriteOrderFileLog(options.InputFolder + '\\' + "ISOCD_" + options.VolumeId + ".log", string.Join("\n", validation.Errors));
+                    throw new InvalidOperationException("Error in order file!\nSee log file: " + options.InputFolder + '\\' + "ISOCD_" + options.VolumeId + ".log");                  
                 }
 
+                if (validation.Warnings.Count > 0)
+                    worker.ReportProgress(new WorkerUpdateStatus { StatusMessage = "Missing entry in order file.\nSee log file: " + options.InputFolder + '\\' + "ISOCD_" + options.VolumeId + ".log" });
+
                 foreach (var w in validation.Warnings)
-                    worker.ReportProgress(new WorkerUpdateStatus { StatusMessage = "Order warning: " + w });
+                {
+                    WriteOrderFileLog(options.InputFolder + '\\' + "ISOCD_" + options.VolumeId + ".log", w);  
+                }
 
                 ApplyOrderFile(options.InputFolder + '\\' + "ISOCD_" + options.VolumeId + ".txt");
             }
