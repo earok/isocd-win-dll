@@ -13,6 +13,7 @@ namespace isocd_win {
         const string COULD_NOT_DOWNLOAD_TM_FILES = "Could not download trademark files - aborting!";
         const string ABORT_BUILD_WARNING_MESSAGE = "Are you sure you want to abort the build process?";
         const string OVERWRITE_ISO_WARNING_MESSAGE = "Are you sure you want to overwrite the ISO file '{0}'?";
+        const string OVERWRITE_LOG_WARNING_MESSAGE = "Are you sure you want to overwrite the LOG file '{0}'?";
         const string MUST_SELECT_SOURCE_AND_IMAGE_ERROR_MESSAGE = "You must select both a source folder and image file.";
         const string SOURCE_MUST_BE_VALID_ERROR_MESSAGE = "Source must be a valid folder.";
         const string IMAGE_MUST_BE_VALID_ERROR_MESSAGE = "Image must be a valid file.";
@@ -140,6 +141,9 @@ namespace isocd_win {
                 MessageBox.Show(configManager.Options.ValidationResult().Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                 return;
             }*/
+
+            SetAppState(AppStates.BuildingIso);
+            UpdateConfigFromForm();
 
             await worker.StartWorkAsync(configManager.Options);
 
@@ -384,6 +388,17 @@ namespace isocd_win {
             configManager.Options.GenerateOrderFile = true;
             configManager.Options.UseOrderFile = false;
 
+            if (File.Exists(srcTextBox.Text + '\\' + "ISOCD_" + configManager.Options.VolumeId + ".log"))
+            {
+                if (ShowWarning(string.Format(OVERWRITE_LOG_WARNING_MESSAGE, srcTextBox.Text + '\\' + "ISOCD_" + configManager.Options.VolumeId + ".log")) == DialogResult.No)
+                {
+                    return;
+                }
+            }
+
+            SetAppState(AppStates.BuildingIso);
+            UpdateConfigFromForm();
+
             await worker.StartWorkAsync(configManager.Options);
 
             SetAppState(AppStates.Idle);
@@ -411,8 +426,8 @@ namespace isocd_win {
                 return false;
             }
 
-            SetAppState(AppStates.BuildingIso);
-            UpdateConfigFromForm();
+            /*SetAppState(AppStates.BuildingIso);
+            UpdateConfigFromForm();*/
 
             if (!configManager.Options.IsValid())
             {

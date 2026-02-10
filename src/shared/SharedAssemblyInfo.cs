@@ -4,7 +4,7 @@
 
 using System.Reflection;
 
-[assembly: AssemblyCopyright("Copyright © 2020 Ben Squibb")]
+[assembly: AssemblyCopyright("Copyright © 2020 Ben Squibb, Maciej Sees")]
 
 // Version information for an assembly consists of the following four values:
 //
@@ -17,5 +17,5 @@ using System.Reflection;
 // by using the '*' as shown below:
 // [assembly: AssemblyVersion("1.0.*")]
 
-[assembly: AssemblyVersion("1.3.4.0")]
-[assembly: AssemblyFileVersion("1.3.4.0")]
+[assembly: AssemblyVersion("1.3.4.1")]
+[assembly: AssemblyFileVersion("1.3.4.1")]

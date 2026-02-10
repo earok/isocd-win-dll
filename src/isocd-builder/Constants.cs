@@ -66,7 +66,5 @@ namespace isocd_builder {
 
         public const string VALIDATION_SUCCESSFUL_MESSAGE = "Validation successful.";
         public const string VALIDATION_NULL_INPUT_IS_INVALID_MESSAGE = "Null input is invalid.";
-        public const string VALIDATION_ORDER_FILE_WARNING = "Order f. warning ";
-        //public const string VALIDATION_ORDER_FILE_FAILED = "Order f. failed ";
     }
 }
