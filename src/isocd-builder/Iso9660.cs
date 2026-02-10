@@ -86,7 +86,7 @@ namespace isocd_builder
 
             //Encoding windowsEncoding = Encoding.GetEncoding(1250); // Windows-1250
             //Encoding isoEncoding = Encoding.GetEncoding("ISO-8859-1");
-
+            bool illegalCharInOrderFile = false;
             var _parentDir = parent;
 
             while (parent != null)
@@ -114,10 +114,10 @@ namespace isocd_builder
 
                     bool isValid = Regex.IsMatch(e.Name, @"^[a-zA-Z0-9 ()!_.+\-\[\]\{\}&#$@]+$"); //allowed chars
                     if (!isValid)
-                        throw new InvalidOperationException(
-                        isocd_builder_constants.ERROR_MESSAGE_ILLEGAL_CHARACTER +
-                        e.Path
-                        );
+                    {
+                        illegalCharInOrderFile = true;
+                        WriteOrderFileLog(options.InputFolder + '\\' + "ISOCD_" + options.VolumeId + ".log", "ILLEGAL CHAR " + DateTime.Now + " " + e.Path);
+                    }
 
                     //byte[] windowsBytes = windowsEncoding.GetBytes(e.Name);
                     //e.Name = isoEncoding.GetString(windowsBytes);
@@ -132,6 +132,10 @@ namespace isocd_builder
 
                 parent = dirQueue.Count > 0 ? dirQueue.Dequeue() : null;
                 parentDirNumber++;
+            }
+            if (illegalCharInOrderFile)
+            {
+                throw new InvalidOperationException("Illegal character in file or directory name!\nSee log file: " + options.InputFolder + '\\' + "ISOCD_" + options.VolumeId + ".log");
             }
         }
 

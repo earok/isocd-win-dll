@@ -56,7 +56,6 @@ namespace isocd_builder {
 
         public const string ERROR_MESSAGE_SUBDIRECTORY_LIMIT_EXCEEDED = "Subdirectory limit exceeded!";
         public const string ERROR_MESSAGE_PATH_LENGTH_TO_LONG = "The complete path name is too long!";
-        public const string ERROR_MESSAGE_ILLEGAL_CHARACTER = "Illegal character: ";
 
         public const string ARG_EXCEPTION_UNRECOGNISED_ARGUMENT = "Unrecognised argument.";
         public const string ARG_EXCEPTION_ARGUMENT_MUST_SPECIFY_STRING_VALUE = "Argument must specify a string value.";
