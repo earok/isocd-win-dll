@@ -60,7 +60,7 @@ namespace isocd_builder {
         [CmdLineOption(115, "tm", "Use trademark file", DefaultValue = true)]
         public bool Trademark { get; set; }
 
-        [CmdLineOption(116, "f", "Use fast search optimisation", DefaultValue = true)]
+        [CmdLineOption(116, "f", "Use fast search optimisation", DefaultValue = false)]
         public bool FastSearch { get; set; }
 
         [CmdLineOption(117, "s", "Use speed independent (allow reading at higher speeds with newer drives)", DefaultValue = false)]

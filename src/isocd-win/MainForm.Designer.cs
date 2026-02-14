@@ -65,7 +65,7 @@
             this.startBuildButton.Margin = new System.Windows.Forms.Padding(4);
             this.startBuildButton.Name = "startBuildButton";
             this.startBuildButton.Size = new System.Drawing.Size(220, 56);
-            this.startBuildButton.TabIndex = 11;
+            this.startBuildButton.TabIndex = 13;
             this.startBuildButton.Text = "Start Build";
             this.startBuildButton.UseVisualStyleBackColor = true;
             this.startBuildButton.Click += new System.EventHandler(this.StartBuildButton_Click);
@@ -102,11 +102,11 @@
             // authorLabel
             // 
             this.authorLabel.AutoSize = true;
-            this.authorLabel.Location = new System.Drawing.Point(461, 441);
+            this.authorLabel.Location = new System.Drawing.Point(461, 453);
             this.authorLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.authorLabel.Name = "authorLabel";
             this.authorLabel.Size = new System.Drawing.Size(271, 17);
-            this.authorLabel.TabIndex = 16;
+            this.authorLabel.TabIndex = 18;
             this.authorLabel.Text = "«Ben Squibb - 2020, Maciej Sees - 2025»";
             // 
             // srcBrowseButton
@@ -140,7 +140,7 @@
             this.statusLabel.MinimumSize = new System.Drawing.Size(440, 5);
             this.statusLabel.Name = "statusLabel";
             this.statusLabel.Size = new System.Drawing.Size(658, 54);
-            this.statusLabel.TabIndex = 14;
+            this.statusLabel.TabIndex = 17;
             this.statusLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // optionsButton
@@ -149,7 +149,7 @@
             this.optionsButton.Margin = new System.Windows.Forms.Padding(4);
             this.optionsButton.Name = "optionsButton";
             this.optionsButton.Size = new System.Drawing.Size(100, 27);
-            this.optionsButton.TabIndex = 15;
+            this.optionsButton.TabIndex = 11;
             this.optionsButton.Text = "Options";
             this.optionsButton.UseVisualStyleBackColor = true;
             this.optionsButton.Click += new System.EventHandler(this.OptionsButton_Click);
@@ -217,7 +217,7 @@
             this.buildStatusGroupBox.Margin = new System.Windows.Forms.Padding(4);
             this.buildStatusGroupBox.Name = "buildStatusGroupBox";
             this.buildStatusGroupBox.Size = new System.Drawing.Size(658, 56);
-            this.buildStatusGroupBox.TabIndex = 13;
+            this.buildStatusGroupBox.TabIndex = 16;
             // 
             // buildStatusLabel
             // 
@@ -226,7 +226,7 @@
             this.buildStatusLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.buildStatusLabel.Name = "buildStatusLabel";
             this.buildStatusLabel.Size = new System.Drawing.Size(83, 17);
-            this.buildStatusLabel.TabIndex = 12;
+            this.buildStatusLabel.TabIndex = 15;
             this.buildStatusLabel.Text = "Build Status";
             // 
             // GenerateOrderFileButton
@@ -236,7 +236,7 @@
             this.GenerateOrderFileButton.Margin = new System.Windows.Forms.Padding(4);
             this.GenerateOrderFileButton.Name = "GenerateOrderFileButton";
             this.GenerateOrderFileButton.Size = new System.Drawing.Size(220, 56);
-            this.GenerateOrderFileButton.TabIndex = 17;
+            this.GenerateOrderFileButton.TabIndex = 12;
             this.GenerateOrderFileButton.Text = "Generate order file";
             this.GenerateOrderFileButton.UseVisualStyleBackColor = true;
             this.GenerateOrderFileButton.Click += new System.EventHandler(this.GenerateOrderFileButton_Click);

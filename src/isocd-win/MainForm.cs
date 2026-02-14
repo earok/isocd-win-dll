@@ -42,8 +42,10 @@ namespace isocd_win {
         public ISOCDWin() {
             InitializeComponent();
 
+            //GenerateOrderFileButton.Tag = srcTextBox.Text + '\\' + "ISOCD_" + configManager.Options.VolumeId + ".log";
+
             var version = Assembly.GetExecutingAssembly().GetName().Version;
-            Text += $" v{version.Major}.{version.Minor}.{version.Build}";
+            Text += $" v{version.Major}.{version.Minor}.{version.Build}.{version.Revision}";
 
             targetSystemComboBox.DataSource = Enum.GetValues(typeof(TargetSystemType));
 

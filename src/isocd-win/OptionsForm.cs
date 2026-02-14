@@ -162,8 +162,14 @@ namespace isocd_win {
 
         private void useOrderFileCheckBox_CheckedChanged(object sender, EventArgs e)
         {
-            if (useOrderFileCheckBox.Checked)
-                _options.GenerateOrderFile = false;
+            if (useOrderFileCheckBox.Checked) _options.GenerateOrderFile = false;
+
+            if (useOrderFileCheckBox.Checked == true) fastSearchCheckBox.Checked = false;
+        }
+
+        private void fastSearchCheckBox_CheckedChanged(object sender, EventArgs e)
+        {
+            if (fastSearchCheckBox.Checked == true) useOrderFileCheckBox.Checked = false;
         }
     }
 }
