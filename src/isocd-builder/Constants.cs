@@ -54,8 +54,9 @@ namespace isocd_builder {
         public const string ERROR_MESSAGE_INPUT_FOLDER_IS_EMPTY = "Provided input folder is empty!";
         public const string ERROR_MESSAGE_ISO_IMAGE_TOO_BIG = "ISO image size exceeds the space available on the disc!";
 
-        public const string ERROR_MESSAGE_SUBDIRECTORY_LIMIT_EXCEEDED = "Subdirectory limit exceeded!";
-        public const string ERROR_MESSAGE_PATH_LENGTH_TO_LONG = "The complete path name is too long!";
+        public const string ERROR_MESSAGE_SUBDIRECTORY_LIMIT_EXCEEDED = "Subdirectory limit exceeded!\nSee log file: ";
+        public const string ERROR_MESSAGE_PATH_LENGTH_TO_LONG = "One of the the complete path name is too long!\nSee log file: ";
+        public const string ERROR_MESSAGE_FILENAME_LENGTH_TO_LONG = "One of the file names is too long! Maximum 29 characters.\nSee log file: ";
 
         public const string ARG_EXCEPTION_UNRECOGNISED_ARGUMENT = "Unrecognised argument.";
         public const string ARG_EXCEPTION_ARGUMENT_MUST_SPECIFY_STRING_VALUE = "Argument must specify a string value.";

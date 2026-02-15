@@ -166,11 +166,18 @@ namespace isocd_builder
                 DateStamp = f.LastWriteTimeUtc
             };
 
+            if (f.Name.Count() > 29)
+            {
+                WriteOrderFileLog(options.InputFolder + '\\' + "ISOCD_" + options.VolumeId + ".log", "NAME TO LONG " + DateTime.Now + " " + f.FullName);
+                throw new InvalidOperationException(isocd_builder_constants.ERROR_MESSAGE_FILENAME_LENGTH_TO_LONG + options.InputFolder + '\\' + "ISOCD_" + options.VolumeId + ".log");
+            }
+
             string _rootSubdirectory = f.FullName.Replace(_parentDir.Path, "");
 
             if (_rootSubdirectory.Count() > 255)
             {
-                throw new InvalidOperationException(isocd_builder_constants.ERROR_MESSAGE_PATH_LENGTH_TO_LONG);
+                WriteOrderFileLog(options.InputFolder + '\\' + "ISOCD_" + options.VolumeId + ".log", "PATH TO LONG " + DateTime.Now + " " + f.FullName);
+                throw new InvalidOperationException(isocd_builder_constants.ERROR_MESSAGE_PATH_LENGTH_TO_LONG + options.InputFolder + '\\' + "ISOCD_" + options.VolumeId + ".log");
             }
 
             if (f is FileInfoBase)
@@ -182,7 +189,8 @@ namespace isocd_builder
             {
                 if (_rootSubdirectory.Count(testChar => testChar == '\\') > 8)
                 {
-                    throw new InvalidOperationException(isocd_builder_constants.ERROR_MESSAGE_SUBDIRECTORY_LIMIT_EXCEEDED);
+                    WriteOrderFileLog(options.InputFolder + '\\' + "ISOCD_" + options.VolumeId + ".log", "SUBDIR LIMIT " + DateTime.Now + " " + f.FullName);
+                    throw new InvalidOperationException(isocd_builder_constants.ERROR_MESSAGE_SUBDIRECTORY_LIMIT_EXCEEDED + options.InputFolder + '\\' + "ISOCD_" + options.VolumeId + ".log");
                 }
 
                 entry.Type = EntryType.Directory;
