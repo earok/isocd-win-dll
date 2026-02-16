@@ -112,7 +112,7 @@ namespace isocd_builder
                 {
                     e.Index = indexCounter++;
 
-                    bool isValid = Regex.IsMatch(e.Name, @"^[a-zA-Z0-9 ()!_.+\-\[\]\{\}&#$@]+$"); //allowed chars
+                    bool isValid = Regex.IsMatch(e.Name, @"^[a-zA-Z0-9 ()!_.,+\-\[\]\{\}&#$@]+$"); //allowed chars
                     if (!isValid)
                     {
                         illegalCharInOrderFile = true;
