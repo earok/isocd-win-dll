@@ -308,7 +308,7 @@ namespace isocd_win {
 
         void SetControlState(bool enabled) {
             if(enabled) {
-                startBuildButton.Text = "Build ISO and save temlate";
+                startBuildButton.Text = "Build ISO and save template";
             }
             else {
                 statusLabel.Text = "Scanning directories...";

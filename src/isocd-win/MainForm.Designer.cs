@@ -70,7 +70,7 @@
             this.startBuildButton.Name = "startBuildButton";
             this.startBuildButton.Size = new System.Drawing.Size(330, 56);
             this.startBuildButton.TabIndex = 17;
-            this.startBuildButton.Text = "Build ISO and save temlate";
+            this.startBuildButton.Text = "Build ISO and save template";
             this.startBuildButton.UseVisualStyleBackColor = false;
             this.startBuildButton.Click += new System.EventHandler(this.StartBuildButton_Click);
             // 
