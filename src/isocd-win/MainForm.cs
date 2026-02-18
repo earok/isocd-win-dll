@@ -225,8 +225,8 @@ namespace isocd_win {
 
             using (var fdlg = new OpenFileDialog
             {
-                Title = "Browse for settings file",
-                Filter = "Settings files (*.xml)|*.xml",
+                Title = "Browse for template file",
+                Filter = "Template files (*.xml)|*.xml",
                 FilterIndex = 1,
                 RestoreDirectory = true,
                 CheckFileExists = false,
@@ -240,8 +240,8 @@ namespace isocd_win {
                     settingsTextBox.Text = fdlg.FileName;
                 }
             }
-
-            loadSetting(settingsTextBox.Text);
+            if (File.Exists(settingsTextBox.Text))
+                loadSetting(settingsTextBox.Text);
         }
 
         void OptionsButton_Click(object sender, EventArgs e) {
