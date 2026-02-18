@@ -5,7 +5,9 @@ using System.Xml.Serialization;
 
 namespace isocd_win {
     public class ConfigManager {
-        readonly string m_sConfigFileName = Path.Combine(isocd_builder_constants.ISOCDWIN_PUBLIC_DOCUMENTS_PATH, $"{Path.GetFileNameWithoutExtension(Application.ExecutablePath)}.xml");
+
+        //readonly string m_sConfigFileName = Path.Combine(isocd_builder_constants.ISOCDWIN_PUBLIC_DOCUMENTS_PATH, $"{Path.GetFileNameWithoutExtension(Application.ExecutablePath)}.xml");
+        public string m_sConfigFileName = Path.Combine(isocd_builder_constants.ISOCDWIN_PUBLIC_DOCUMENTS_PATH, $"{Path.GetFileNameWithoutExtension(Application.ExecutablePath)}.xml");
 
         public ExtendedOptions Options { get; set; }
 
@@ -13,8 +15,9 @@ namespace isocd_win {
             Options = new ExtendedOptions();
         }
 
-        public bool LoadConfig() {
-            if(File.Exists(m_sConfigFileName)) {
+        public bool LoadConfig(string _m_sConfigFileName) {
+            if (_m_sConfigFileName != "") m_sConfigFileName = _m_sConfigFileName;
+            if (File.Exists(m_sConfigFileName)) {
                 using(var srReader = File.OpenText(m_sConfigFileName)) {
                     var tType = Options.GetType();
                     var xsSerializer = new XmlSerializer(tType);
@@ -27,8 +30,9 @@ namespace isocd_win {
             return false;
         }
 
-        public void SaveConfig() {
-            using(var swWriter = File.CreateText(m_sConfigFileName)) {
+        public void SaveConfig(string _m_sConfigFileName) {
+            if (_m_sConfigFileName != "") m_sConfigFileName = _m_sConfigFileName;
+            using (var swWriter = File.CreateText(m_sConfigFileName)) {
                 var tType = Options.GetType();
                 if(tType.IsSerializable) {
                     var xsSerializer = new XmlSerializer(tType);

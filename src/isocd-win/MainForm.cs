@@ -23,8 +23,8 @@ namespace isocd_win {
         readonly ConfigManager configManager = new ConfigManager();
 
 #pragma warning disable IDE0069 // These are disposed in the FormClosed event handler, but is missed by IntelliSense
-        readonly SoundPlayer successSound;
-        readonly SoundPlayer errorSound;
+        private SoundPlayer successSound;
+        private SoundPlayer errorSound;
 #pragma warning restore IDE0069
 
         readonly BuildIsoWorker worker;
@@ -49,8 +49,10 @@ namespace isocd_win {
 
             targetSystemComboBox.DataSource = Enum.GetValues(typeof(TargetSystemType));
 
+            loadSetting("");
+
             try {
-                var loadedConfig = configManager.LoadConfig();
+                /*var loadedConfig = configManager.LoadConfig("");
 
                 if(!loadedConfig) {
                     // Default to CD32 on first run
@@ -61,6 +63,7 @@ namespace isocd_win {
 
                 srcTextBox.Text = configManager.Options.InputFolder;
                 imgTextBox.Text = configManager.Options.OutputFile;
+                settingsTextBox.Text = configManager.m_sConfigFileName;
                 useTmFileCheckBox.Checked = configManager.Options.Trademark;
                 targetSystemComboBox.SelectedItem = configManager.Options.TargetSystem;
 
@@ -74,7 +77,7 @@ namespace isocd_win {
                 successSound.Load();
                 errorSound = new SoundPlayer(Resources.error);
                 errorSound.Load();
-
+                */
                 worker = new BuildIsoWorker();
                 worker.WorkerUpdateEvent += WorkerUpdate;
                 worker.WorkerCompletedEvent += WorkerCompleted;
@@ -203,6 +206,44 @@ namespace isocd_win {
             }
         }
 
+        private void settingsBrowseButton_Click(object sender, EventArgs e)
+        {
+            var path = !string.IsNullOrWhiteSpace(settingsTextBox.Text) ?
+                Path.GetDirectoryName(settingsTextBox.Text) :
+                Directory.GetCurrentDirectory();
+
+            string file;
+
+            if (!string.IsNullOrWhiteSpace(settingsTextBox.Text))
+            {
+                file = Path.GetFileName(settingsTextBox.Text);
+            }
+            else
+            {
+                file = $"{Path.GetFileNameWithoutExtension(Application.ExecutablePath)}.xml";
+            }
+
+            using (var fdlg = new OpenFileDialog
+            {
+                Title = "Browse for settings file",
+                Filter = "Settings files (*.xml)|*.xml",
+                FilterIndex = 1,
+                RestoreDirectory = true,
+                CheckFileExists = false,
+                CheckPathExists = true,
+                InitialDirectory = path,
+                FileName = file
+            })
+            {
+                if (fdlg.ShowDialog() == DialogResult.OK)
+                {
+                    settingsTextBox.Text = fdlg.FileName;
+                }
+            }
+
+            loadSetting(settingsTextBox.Text);
+        }
+
         void OptionsButton_Click(object sender, EventArgs e) {
             using(var optionsForm = new optionsForm(configManager.Options)) {
                 optionsForm.ShowDialog();
@@ -230,7 +271,7 @@ namespace isocd_win {
                     break;
             }
 
-            configManager.SaveConfig();
+            configManager.SaveConfig(settingsTextBox.Text);
         }
 
         void ISOCDWin_MouseDown(object sender, MouseEventArgs e) {
@@ -267,7 +308,7 @@ namespace isocd_win {
 
         void SetControlState(bool enabled) {
             if(enabled) {
-                startBuildButton.Text = "Build";
+                startBuildButton.Text = "Build ISO and save temlate";
             }
             else {
                 statusLabel.Text = "Scanning directories...";
@@ -438,6 +479,83 @@ namespace isocd_win {
             }
 
              return true;
+        }
+
+        private void loadSetting(string _stettings)
+        {
+            try
+            {
+                var loadedConfig = configManager.LoadConfig(_stettings);
+
+                if (!loadedConfig)
+                {
+                    // Default to CD32 on first run
+                    configManager.Options.TargetSystem = TargetSystemType.CD32;
+                    configManager.Options.TrademarkFile = Path.Combine(isocd_builder_constants.ISOCDWIN_PUBLIC_DOCUMENTS_PATH, isocd_builder_constants.CD32_TRADEMARK_FILE);
+                    SetSystemLogo();
+                }
+
+                srcTextBox.Text = configManager.Options.InputFolder;
+                imgTextBox.Text = configManager.Options.OutputFile;
+                settingsTextBox.Text = configManager.m_sConfigFileName;
+                useTmFileCheckBox.Checked = configManager.Options.Trademark;
+                targetSystemComboBox.SelectedItem = configManager.Options.TargetSystem;
+
+                useTmFileCheckBox_CheckedChanged(null, null);
+
+                if (File.Exists(configManager.Options.TrademarkFile))
+                {
+                    SetSystemLogo();
+                }
+
+                successSound = new SoundPlayer(Resources.success);
+                successSound.Load();
+                errorSound = new SoundPlayer(Resources.error);
+                errorSound.Load();
+
+                //worker = new BuildIsoWorker();
+                //worker.WorkerUpdateEvent += WorkerUpdate;
+                //worker.WorkerCompletedEvent += WorkerCompleted;
+            }
+            catch (Exception ex)
+            {
+                ShowError(ex.Message);
+            }
+        }
+
+        private void progressBar_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void statusLabel_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void targetSystemPictureBox_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void targetSystemSettingsLabel_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void ISOCDWin_Load(object sender, EventArgs e)
+        {
+
+        }
+
+        private void targetSystemGroupBox_Paint(object sender, PaintEventArgs e)
+        {
+
+        }
+
+        private void buildStatusLabel_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }
