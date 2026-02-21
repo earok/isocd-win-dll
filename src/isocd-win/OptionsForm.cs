@@ -44,6 +44,7 @@ namespace isocd_win {
             playSoundsCheckBox.Checked = _options.PlaySounds;
             WinUAETestCheckBox.Checked = _options.WinUAETest;
             winUAEPathTextBox.Text = _options.WinUAEPath;
+            winUAEConfigPathTextBox.Text = _options.WinUAEConfigPath;
 
             useOrderFileCheckBox.Checked = _options.UseOrderFile && !_options.GenerateOrderFile;
         }
@@ -72,6 +73,7 @@ namespace isocd_win {
             newOptions.PlaySounds = playSoundsCheckBox.Checked;
             newOptions.WinUAETest = WinUAETestCheckBox.Checked;
             newOptions.WinUAEPath = winUAEPathTextBox.Text;
+            newOptions.WinUAEConfigPath = winUAEConfigPathTextBox.Text;
 
             newOptions.UseOrderFile = useOrderFileCheckBox.Checked;
 
@@ -106,6 +108,25 @@ namespace isocd_win {
             }) {
                 if(fdlg.ShowDialog() == DialogResult.OK) {
                     winUAEPathTextBox.Text = fdlg.FileName;
+                }
+            }
+        }
+
+        void winUAEConfigBrowseButton_Click(object sender, EventArgs e)
+        {
+            using (var fdlg = new OpenFileDialog
+            {
+                Title = "Browse for WinUAE config file",
+                Filter = "WinUAE Config (*.uae)|*.uae",
+                FilterIndex = 1,
+                RestoreDirectory = true,
+                CheckFileExists = true,
+                InitialDirectory = Directory.GetCurrentDirectory()
+            })
+            {
+                if (fdlg.ShowDialog() == DialogResult.OK)
+                {
+                    winUAEConfigPathTextBox.Text = fdlg.FileName;
                 }
             }
         }
@@ -155,6 +176,11 @@ namespace isocd_win {
 
         }
 
+        private void winUAEConfigPathTextBox_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
         private void playSoundsCheckBox_CheckedChanged(object sender, EventArgs e)
         {
 
@@ -170,6 +196,16 @@ namespace isocd_win {
         private void fastSearchCheckBox_CheckedChanged(object sender, EventArgs e)
         {
             if (fastSearchCheckBox.Checked == true) useOrderFileCheckBox.Checked = false;
+        }
+
+        private void WinUAETestCheckBox_CheckedChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void optionsForm_Load(object sender, EventArgs e)
+        {
+
         }
     }
 }

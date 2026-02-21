@@ -10,6 +10,8 @@ namespace isocd_win {
 
         public string WinUAEPath { get; set; }
 
+        public string WinUAEConfigPath { get; set; }
+
         //public bool GenerateOrderFile { get; set; }
 
         //public bool UseOrderFile { get; set; }

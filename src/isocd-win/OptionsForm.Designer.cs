@@ -54,11 +54,6 @@
             this.imagePaddingLabel = new System.Windows.Forms.Label();
             this.WinUAETestCheckBox = new System.Windows.Forms.CheckBox();
             this.cdfsGroupBox = new System.Windows.Forms.GroupBox();
-            this.dirCacheTextBox = new isocd_win.ValueBox();
-            this.dataCacheTextBox = new isocd_win.ValueBox();
-            this.fileLockTextBox = new isocd_win.ValueBox();
-            this.fileHandleTextBox = new isocd_win.ValueBox();
-            this.retriesTextBox = new isocd_win.ValueBox();
             this.isoGroupBox = new System.Windows.Forms.GroupBox();
             this.generalGroupBox = new System.Windows.Forms.GroupBox();
             this.useOrderFileCheckBox = new System.Windows.Forms.CheckBox();
@@ -66,6 +61,14 @@
             this.winUAEPathLabel = new System.Windows.Forms.Label();
             this.winUAEPathTextBox = new System.Windows.Forms.TextBox();
             this.HelpTextBox = new System.Windows.Forms.TextBox();
+            this.winUAEConfigPathTextBox = new System.Windows.Forms.TextBox();
+            this.winUAEConfigPathLabel = new System.Windows.Forms.Label();
+            this.winUAEConfigBrowseButton = new System.Windows.Forms.Button();
+            this.dirCacheTextBox = new isocd_win.ValueBox();
+            this.dataCacheTextBox = new isocd_win.ValueBox();
+            this.fileLockTextBox = new isocd_win.ValueBox();
+            this.fileHandleTextBox = new isocd_win.ValueBox();
+            this.retriesTextBox = new isocd_win.ValueBox();
             this.cdfsGroupBox.SuspendLayout();
             this.isoGroupBox.SuspendLayout();
             this.generalGroupBox.SuspendLayout();
@@ -264,7 +267,7 @@
             // playSoundsCheckBox
             // 
             this.playSoundsCheckBox.AutoSize = true;
-            this.playSoundsCheckBox.Location = new System.Drawing.Point(8, 72);
+            this.playSoundsCheckBox.Location = new System.Drawing.Point(8, 47);
             this.playSoundsCheckBox.Margin = new System.Windows.Forms.Padding(4);
             this.playSoundsCheckBox.Name = "playSoundsCheckBox";
             this.playSoundsCheckBox.Size = new System.Drawing.Size(109, 21);
@@ -396,13 +399,14 @@
             // WinUAETestCheckBox
             // 
             this.WinUAETestCheckBox.AutoSize = true;
-            this.WinUAETestCheckBox.Location = new System.Drawing.Point(8, 100);
+            this.WinUAETestCheckBox.Location = new System.Drawing.Point(8, 71);
             this.WinUAETestCheckBox.Margin = new System.Windows.Forms.Padding(4);
             this.WinUAETestCheckBox.Name = "WinUAETestCheckBox";
             this.WinUAETestCheckBox.Size = new System.Drawing.Size(18, 17);
             this.WinUAETestCheckBox.TabIndex = 33;
             this.WinUAETestCheckBox.Tag = "Test ISO with WinUAE";
             this.WinUAETestCheckBox.UseVisualStyleBackColor = true;
+            this.WinUAETestCheckBox.CheckedChanged += new System.EventHandler(this.WinUAETestCheckBox_CheckedChanged);
             this.WinUAETestCheckBox.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.textBox_HelpRequested);
             // 
             // cdfsGroupBox
@@ -432,6 +436,151 @@
             this.cdfsGroupBox.TabIndex = 1;
             this.cdfsGroupBox.TabStop = false;
             this.cdfsGroupBox.Text = "CDFS";
+            // 
+            // isoGroupBox
+            // 
+            this.isoGroupBox.Controls.Add(this.volumeSetIdTextBox);
+            this.isoGroupBox.Controls.Add(this.volumeIdTextBox);
+            this.isoGroupBox.Controls.Add(this.volumeIdLabel);
+            this.isoGroupBox.Controls.Add(this.imagePaddingLabel);
+            this.isoGroupBox.Controls.Add(this.imagePaddingComboBox);
+            this.isoGroupBox.Controls.Add(this.volSetIdLabel);
+            this.isoGroupBox.Controls.Add(this.publisherIdTextBox);
+            this.isoGroupBox.Controls.Add(this.applicationIdLabel);
+            this.isoGroupBox.Controls.Add(this.publisherIdLabel);
+            this.isoGroupBox.Controls.Add(this.applicationIdTextBox);
+            this.isoGroupBox.Controls.Add(this.dataPreparerIdTextBox);
+            this.isoGroupBox.Controls.Add(this.dataPreparerIdLabel);
+            this.isoGroupBox.Location = new System.Drawing.Point(443, 4);
+            this.isoGroupBox.Margin = new System.Windows.Forms.Padding(4);
+            this.isoGroupBox.Name = "isoGroupBox";
+            this.isoGroupBox.Padding = new System.Windows.Forms.Padding(4);
+            this.isoGroupBox.Size = new System.Drawing.Size(497, 287);
+            this.isoGroupBox.TabIndex = 19;
+            this.isoGroupBox.TabStop = false;
+            this.isoGroupBox.Text = "ISO";
+            // 
+            // generalGroupBox
+            // 
+            this.generalGroupBox.Controls.Add(this.winUAEConfigBrowseButton);
+            this.generalGroupBox.Controls.Add(this.winUAEConfigPathLabel);
+            this.generalGroupBox.Controls.Add(this.winUAEConfigPathTextBox);
+            this.generalGroupBox.Controls.Add(this.useOrderFileCheckBox);
+            this.generalGroupBox.Controls.Add(this.winUAEBrowseButton);
+            this.generalGroupBox.Controls.Add(this.winUAEPathLabel);
+            this.generalGroupBox.Controls.Add(this.winUAEPathTextBox);
+            this.generalGroupBox.Controls.Add(this.WinUAETestCheckBox);
+            this.generalGroupBox.Controls.Add(this.playSoundsCheckBox);
+            this.generalGroupBox.Location = new System.Drawing.Point(443, 294);
+            this.generalGroupBox.Margin = new System.Windows.Forms.Padding(4);
+            this.generalGroupBox.Name = "generalGroupBox";
+            this.generalGroupBox.Padding = new System.Windows.Forms.Padding(4);
+            this.generalGroupBox.Size = new System.Drawing.Size(497, 128);
+            this.generalGroupBox.TabIndex = 32;
+            this.generalGroupBox.TabStop = false;
+            this.generalGroupBox.Text = "General";
+            // 
+            // useOrderFileCheckBox
+            // 
+            this.useOrderFileCheckBox.AutoSize = true;
+            this.useOrderFileCheckBox.Location = new System.Drawing.Point(8, 23);
+            this.useOrderFileCheckBox.Margin = new System.Windows.Forms.Padding(4);
+            this.useOrderFileCheckBox.Name = "useOrderFileCheckBox";
+            this.useOrderFileCheckBox.Size = new System.Drawing.Size(381, 21);
+            this.useOrderFileCheckBox.TabIndex = 33;
+            this.useOrderFileCheckBox.Tag = resources.GetString("useOrderFileCheckBox.Tag");
+            this.useOrderFileCheckBox.Text = "Use order file (Be careful when modifying the order file!)";
+            this.useOrderFileCheckBox.UseVisualStyleBackColor = true;
+            this.useOrderFileCheckBox.CheckedChanged += new System.EventHandler(this.useOrderFileCheckBox_CheckedChanged);
+            this.useOrderFileCheckBox.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.textBox_HelpRequested);
+            // 
+            // winUAEBrowseButton
+            // 
+            this.winUAEBrowseButton.Location = new System.Drawing.Point(389, 65);
+            this.winUAEBrowseButton.Margin = new System.Windows.Forms.Padding(4);
+            this.winUAEBrowseButton.Name = "winUAEBrowseButton";
+            this.winUAEBrowseButton.Size = new System.Drawing.Size(100, 28);
+            this.winUAEBrowseButton.TabIndex = 37;
+            this.winUAEBrowseButton.Tag = "Browse for WinUAE executable";
+            this.winUAEBrowseButton.Text = "Browse";
+            this.winUAEBrowseButton.UseVisualStyleBackColor = true;
+            this.winUAEBrowseButton.Click += new System.EventHandler(this.WinUAEBrowseButton_Click);
+            this.winUAEBrowseButton.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.textBox_HelpRequested);
+            // 
+            // winUAEPathLabel
+            // 
+            this.winUAEPathLabel.AutoSize = true;
+            this.winUAEPathLabel.Location = new System.Drawing.Point(27, 71);
+            this.winUAEPathLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.winUAEPathLabel.Name = "winUAEPathLabel";
+            this.winUAEPathLabel.Size = new System.Drawing.Size(93, 17);
+            this.winUAEPathLabel.TabIndex = 35;
+            this.winUAEPathLabel.Text = "WinUAE Path";
+            // 
+            // winUAEPathTextBox
+            // 
+            this.winUAEPathTextBox.Location = new System.Drawing.Point(132, 68);
+            this.winUAEPathTextBox.Margin = new System.Windows.Forms.Padding(4);
+            this.winUAEPathTextBox.Name = "winUAEPathTextBox";
+            this.winUAEPathTextBox.Size = new System.Drawing.Size(253, 22);
+            this.winUAEPathTextBox.TabIndex = 36;
+            this.winUAEPathTextBox.Tag = "WinUAE executable path";
+            this.winUAEPathTextBox.TextChanged += new System.EventHandler(this.winUAEPathTextBox_TextChanged);
+            this.winUAEPathTextBox.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.textBox_HelpRequested);
+            // 
+            // HelpTextBox
+            // 
+            this.HelpTextBox.BackColor = System.Drawing.SystemColors.Control;
+            this.HelpTextBox.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.HelpTextBox.Cursor = System.Windows.Forms.Cursors.Default;
+            this.HelpTextBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
+            this.HelpTextBox.ForeColor = System.Drawing.SystemColors.HotTrack;
+            this.HelpTextBox.Location = new System.Drawing.Point(16, 294);
+            this.HelpTextBox.Margin = new System.Windows.Forms.Padding(2);
+            this.HelpTextBox.Multiline = true;
+            this.HelpTextBox.Name = "HelpTextBox";
+            this.HelpTextBox.ReadOnly = true;
+            this.HelpTextBox.Size = new System.Drawing.Size(419, 99);
+            this.HelpTextBox.TabIndex = 41;
+            this.HelpTextBox.TabStop = false;
+            // 
+            // winUAEConfigPathTextBox
+            // 
+            this.winUAEConfigPathTextBox.Location = new System.Drawing.Point(132, 95);
+            this.winUAEConfigPathTextBox.Margin = new System.Windows.Forms.Padding(4);
+            this.winUAEConfigPathTextBox.Name = "winUAEConfigPathTextBox";
+            this.winUAEConfigPathTextBox.Size = new System.Drawing.Size(253, 22);
+            this.winUAEConfigPathTextBox.TabIndex = 38;
+            this.winUAEConfigPathTextBox.Tag = "WinUAE config path. It doesn\'t matter what ISO file is set in the configuration f" +
+    "ile, it will be replaced by the current ISO file";
+            this.winUAEConfigPathTextBox.TextChanged += new System.EventHandler(this.winUAEConfigPathTextBox_TextChanged);
+            this.winUAEConfigPathTextBox.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.textBox_HelpRequested);
+            // 
+            // winUAEConfigPathLabel
+            // 
+            this.winUAEConfigPathLabel.AutoSize = true;
+            this.winUAEConfigPathLabel.Location = new System.Drawing.Point(27, 98);
+            this.winUAEConfigPathLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.winUAEConfigPathLabel.Name = "winUAEConfigPathLabel";
+            this.winUAEConfigPathLabel.Size = new System.Drawing.Size(104, 17);
+            this.winUAEConfigPathLabel.TabIndex = 40;
+            this.winUAEConfigPathLabel.Tag = "WinUAE config path. It doesn\'t matter what ISO file is set in the configuration f" +
+    "ile, it will be replaced by the current ISO file";
+            this.winUAEConfigPathLabel.Text = "WinUAE Config";
+            this.winUAEConfigPathLabel.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.textBox_HelpRequested);
+            // 
+            // winUAEConfigBrowseButton
+            // 
+            this.winUAEConfigBrowseButton.Location = new System.Drawing.Point(389, 92);
+            this.winUAEConfigBrowseButton.Margin = new System.Windows.Forms.Padding(4);
+            this.winUAEConfigBrowseButton.Name = "winUAEConfigBrowseButton";
+            this.winUAEConfigBrowseButton.Size = new System.Drawing.Size(100, 28);
+            this.winUAEConfigBrowseButton.TabIndex = 39;
+            this.winUAEConfigBrowseButton.Tag = "Browse for WinUAE config file";
+            this.winUAEConfigBrowseButton.Text = "Browse";
+            this.winUAEConfigBrowseButton.UseVisualStyleBackColor = true;
+            this.winUAEConfigBrowseButton.Click += new System.EventHandler(this.winUAEConfigBrowseButton_Click);
+            this.winUAEConfigBrowseButton.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.textBox_HelpRequested);
             // 
             // dirCacheTextBox
             // 
@@ -503,110 +652,6 @@
     " is 32.";
             this.retriesTextBox.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.textBox_HelpRequested);
             // 
-            // isoGroupBox
-            // 
-            this.isoGroupBox.Controls.Add(this.volumeSetIdTextBox);
-            this.isoGroupBox.Controls.Add(this.volumeIdTextBox);
-            this.isoGroupBox.Controls.Add(this.volumeIdLabel);
-            this.isoGroupBox.Controls.Add(this.imagePaddingLabel);
-            this.isoGroupBox.Controls.Add(this.imagePaddingComboBox);
-            this.isoGroupBox.Controls.Add(this.volSetIdLabel);
-            this.isoGroupBox.Controls.Add(this.publisherIdTextBox);
-            this.isoGroupBox.Controls.Add(this.applicationIdLabel);
-            this.isoGroupBox.Controls.Add(this.publisherIdLabel);
-            this.isoGroupBox.Controls.Add(this.applicationIdTextBox);
-            this.isoGroupBox.Controls.Add(this.dataPreparerIdTextBox);
-            this.isoGroupBox.Controls.Add(this.dataPreparerIdLabel);
-            this.isoGroupBox.Location = new System.Drawing.Point(443, 4);
-            this.isoGroupBox.Margin = new System.Windows.Forms.Padding(4);
-            this.isoGroupBox.Name = "isoGroupBox";
-            this.isoGroupBox.Padding = new System.Windows.Forms.Padding(4);
-            this.isoGroupBox.Size = new System.Drawing.Size(497, 287);
-            this.isoGroupBox.TabIndex = 19;
-            this.isoGroupBox.TabStop = false;
-            this.isoGroupBox.Text = "ISO";
-            // 
-            // generalGroupBox
-            // 
-            this.generalGroupBox.Controls.Add(this.useOrderFileCheckBox);
-            this.generalGroupBox.Controls.Add(this.winUAEBrowseButton);
-            this.generalGroupBox.Controls.Add(this.winUAEPathLabel);
-            this.generalGroupBox.Controls.Add(this.winUAEPathTextBox);
-            this.generalGroupBox.Controls.Add(this.WinUAETestCheckBox);
-            this.generalGroupBox.Controls.Add(this.playSoundsCheckBox);
-            this.generalGroupBox.Location = new System.Drawing.Point(443, 294);
-            this.generalGroupBox.Margin = new System.Windows.Forms.Padding(4);
-            this.generalGroupBox.Name = "generalGroupBox";
-            this.generalGroupBox.Padding = new System.Windows.Forms.Padding(4);
-            this.generalGroupBox.Size = new System.Drawing.Size(497, 128);
-            this.generalGroupBox.TabIndex = 32;
-            this.generalGroupBox.TabStop = false;
-            this.generalGroupBox.Text = "General";
-            // 
-            // useOrderFileCheckBox
-            // 
-            this.useOrderFileCheckBox.AutoSize = true;
-            this.useOrderFileCheckBox.Location = new System.Drawing.Point(8, 47);
-            this.useOrderFileCheckBox.Margin = new System.Windows.Forms.Padding(4);
-            this.useOrderFileCheckBox.Name = "useOrderFileCheckBox";
-            this.useOrderFileCheckBox.Size = new System.Drawing.Size(381, 21);
-            this.useOrderFileCheckBox.TabIndex = 33;
-            this.useOrderFileCheckBox.Tag = resources.GetString("useOrderFileCheckBox.Tag");
-            this.useOrderFileCheckBox.Text = "Use order file (Be careful when modifying the order file!)";
-            this.useOrderFileCheckBox.UseVisualStyleBackColor = true;
-            this.useOrderFileCheckBox.CheckedChanged += new System.EventHandler(this.useOrderFileCheckBox_CheckedChanged);
-            this.useOrderFileCheckBox.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.textBox_HelpRequested);
-            // 
-            // winUAEBrowseButton
-            // 
-            this.winUAEBrowseButton.Location = new System.Drawing.Point(389, 95);
-            this.winUAEBrowseButton.Margin = new System.Windows.Forms.Padding(4);
-            this.winUAEBrowseButton.Name = "winUAEBrowseButton";
-            this.winUAEBrowseButton.Size = new System.Drawing.Size(100, 28);
-            this.winUAEBrowseButton.TabIndex = 37;
-            this.winUAEBrowseButton.Tag = "Browse for WinUAE executable";
-            this.winUAEBrowseButton.Text = "Browse";
-            this.winUAEBrowseButton.UseVisualStyleBackColor = true;
-            this.winUAEBrowseButton.Click += new System.EventHandler(this.WinUAEBrowseButton_Click);
-            this.winUAEBrowseButton.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.textBox_HelpRequested);
-            // 
-            // winUAEPathLabel
-            // 
-            this.winUAEPathLabel.AutoSize = true;
-            this.winUAEPathLabel.Location = new System.Drawing.Point(29, 99);
-            this.winUAEPathLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.winUAEPathLabel.Name = "winUAEPathLabel";
-            this.winUAEPathLabel.Size = new System.Drawing.Size(93, 17);
-            this.winUAEPathLabel.TabIndex = 35;
-            this.winUAEPathLabel.Text = "WinUAE Path";
-            // 
-            // winUAEPathTextBox
-            // 
-            this.winUAEPathTextBox.Location = new System.Drawing.Point(130, 98);
-            this.winUAEPathTextBox.Margin = new System.Windows.Forms.Padding(4);
-            this.winUAEPathTextBox.Name = "winUAEPathTextBox";
-            this.winUAEPathTextBox.Size = new System.Drawing.Size(254, 22);
-            this.winUAEPathTextBox.TabIndex = 36;
-            this.winUAEPathTextBox.Tag = "WinUAE executable path";
-            this.winUAEPathTextBox.TextChanged += new System.EventHandler(this.winUAEPathTextBox_TextChanged);
-            this.winUAEPathTextBox.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.textBox_HelpRequested);
-            // 
-            // HelpTextBox
-            // 
-            this.HelpTextBox.BackColor = System.Drawing.SystemColors.Control;
-            this.HelpTextBox.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.HelpTextBox.Cursor = System.Windows.Forms.Cursors.Default;
-            this.HelpTextBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
-            this.HelpTextBox.ForeColor = System.Drawing.SystemColors.HotTrack;
-            this.HelpTextBox.Location = new System.Drawing.Point(16, 294);
-            this.HelpTextBox.Margin = new System.Windows.Forms.Padding(2);
-            this.HelpTextBox.Multiline = true;
-            this.HelpTextBox.Name = "HelpTextBox";
-            this.HelpTextBox.ReadOnly = true;
-            this.HelpTextBox.Size = new System.Drawing.Size(419, 99);
-            this.HelpTextBox.TabIndex = 41;
-            this.HelpTextBox.TabStop = false;
-            // 
             // optionsForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
@@ -629,6 +674,7 @@
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Options";
+            this.Load += new System.EventHandler(this.optionsForm_Load);
             this.Shown += new System.EventHandler(this.SettingsForm_Shown);
             this.cdfsGroupBox.ResumeLayout(false);
             this.cdfsGroupBox.PerformLayout();
@@ -684,5 +730,8 @@
         System.Windows.Forms.Button winUAEBrowseButton;
         private System.Windows.Forms.TextBox HelpTextBox;
         private System.Windows.Forms.CheckBox useOrderFileCheckBox;
+        private System.Windows.Forms.Button winUAEConfigBrowseButton;
+        private System.Windows.Forms.Label winUAEConfigPathLabel;
+        private System.Windows.Forms.TextBox winUAEConfigPathTextBox;
     }
 }

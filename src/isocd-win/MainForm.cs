@@ -6,6 +6,7 @@ using System.Reflection;
 using isocd_builder;
 using System.Media;
 using System.Drawing;
+using System.Diagnostics;
 
 namespace isocd_win {
     public partial class ISOCDWin : Form {
@@ -17,6 +18,16 @@ namespace isocd_win {
         const string MUST_SELECT_SOURCE_AND_IMAGE_ERROR_MESSAGE = "You must select both a source folder and image file.";
         const string SOURCE_MUST_BE_VALID_ERROR_MESSAGE = "Source must be a valid folder.";
         const string IMAGE_MUST_BE_VALID_ERROR_MESSAGE = "Image must be a valid file.";
+        const string BROWSE_FOR_ISO_FILE_INFO_MESSAGE = "Browse for ISO file";
+        const string BROWSE_FOR_TEMPLATE_FILE_INFO_MESSAGE = "Browse for template file";
+        const string BUILD_ISO_AND_SAVE_TEMPLATE_BUTTON = "Build ISO and save template";
+        const string ABORT_BUTTON = "Abort";
+        const string SCANNING_DIRECTORIES_STATUS_LABEL = "Scanning directories...";
+        const string DONE_STATUS_LABEL = "Done!";
+        const string ABORTED_STATUS_LABEL = "Aborted!";
+        const string DOWNLOADING_TRADEMARK_FILES_STATUS_LABEL = "Downloading trademark files, please wait...";
+        const string ERROR_MESSAGE_BOX = "Error";
+        const string WARNING_MESSAGE_BOX = "Warning";
 
         AppStates appState;
 
@@ -42,8 +53,6 @@ namespace isocd_win {
         public ISOCDWin() {
             InitializeComponent();
 
-            //GenerateOrderFileButton.Tag = srcTextBox.Text + '\\' + "ISOCD_" + configManager.Options.VolumeId + ".log";
-
             var version = Assembly.GetExecutingAssembly().GetName().Version;
             Text += $" v{version.Major}.{version.Minor}.{version.Build}.{version.Revision}";
 
@@ -52,32 +61,6 @@ namespace isocd_win {
             loadSetting("");
 
             try {
-                /*var loadedConfig = configManager.LoadConfig("");
-
-                if(!loadedConfig) {
-                    // Default to CD32 on first run
-                    configManager.Options.TargetSystem = TargetSystemType.CD32;
-                    configManager.Options.TrademarkFile = Path.Combine(isocd_builder_constants.ISOCDWIN_PUBLIC_DOCUMENTS_PATH, isocd_builder_constants.CD32_TRADEMARK_FILE);
-                    SetSystemLogo();
-                }
-
-                srcTextBox.Text = configManager.Options.InputFolder;
-                imgTextBox.Text = configManager.Options.OutputFile;
-                settingsTextBox.Text = configManager.m_sConfigFileName;
-                useTmFileCheckBox.Checked = configManager.Options.Trademark;
-                targetSystemComboBox.SelectedItem = configManager.Options.TargetSystem;
-
-                useTmFileCheckBox_CheckedChanged(null, null);
-
-                if(File.Exists(configManager.Options.TrademarkFile)) {
-                    SetSystemLogo();
-                }
-
-                successSound = new SoundPlayer(Resources.success);
-                successSound.Load();
-                errorSound = new SoundPlayer(Resources.error);
-                errorSound.Load();
-                */
                 worker = new BuildIsoWorker();
                 worker.WorkerUpdateEvent += WorkerUpdate;
                 worker.WorkerCompletedEvent += WorkerCompleted;
@@ -118,34 +101,11 @@ namespace isocd_win {
             if (!checkEnteredParameters())
                 return;
 
-            /*if (string.IsNullOrWhiteSpace(srcTextBox.Text) || string.IsNullOrWhiteSpace(imgTextBox.Text)) {
-                ShowError(MUST_SELECT_SOURCE_AND_IMAGE_ERROR_MESSAGE);
-                return;
-            }
-
-            if(!Directory.Exists(srcTextBox.Text)) {
-                ShowError(SOURCE_MUST_BE_VALID_ERROR_MESSAGE);
-                return;
-            }
-
-            if(!Directory.Exists(Path.GetDirectoryName(imgTextBox.Text))) {
-                ShowError(IMAGE_MUST_BE_VALID_ERROR_MESSAGE);
-                return;
-            }*/
-
             if(File.Exists(imgTextBox.Text)) {
                 if(ShowWarning(string.Format(OVERWRITE_ISO_WARNING_MESSAGE, imgTextBox.Text)) == DialogResult.No) {
                     return;
                 }
             }
-
-            /*SetAppState(AppStates.BuildingIso);
-            UpdateConfigFromForm();
-
-            if(!configManager.Options.IsValid()) {
-                MessageBox.Show(configManager.Options.ValidationResult().Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
-                return;
-            }*/
 
             SetAppState(AppStates.BuildingIso);
             UpdateConfigFromForm();
@@ -191,7 +151,7 @@ namespace isocd_win {
             }
 
             using(var fdlg = new OpenFileDialog {
-                Title = "Browse for ISO file",
+                Title = BROWSE_FOR_ISO_FILE_INFO_MESSAGE,
                 Filter = "ISO files (*.iso)|*.iso",
                 FilterIndex = 1,
                 RestoreDirectory = true,
@@ -225,7 +185,7 @@ namespace isocd_win {
 
             using (var fdlg = new OpenFileDialog
             {
-                Title = "Browse for template file",
+                Title = BROWSE_FOR_TEMPLATE_FILE_INFO_MESSAGE,
                 Filter = "Template files (*.xml)|*.xml",
                 FilterIndex = 1,
                 RestoreDirectory = true,
@@ -280,11 +240,11 @@ namespace isocd_win {
         }
 
         DialogResult ShowWarning(string message) {
-            return MessageBox.Show(null, message, "Warning", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+            return MessageBox.Show(null, message, WARNING_MESSAGE_BOX, MessageBoxButtons.YesNo, MessageBoxIcon.Question);
         }
 
         void ShowError(string message) {
-            MessageBox.Show(message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+            MessageBox.Show(message, ERROR_MESSAGE_BOX, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
         }
 
         void ISOCDWin_FormClosing(object sender, FormClosingEventArgs e) {
@@ -308,11 +268,11 @@ namespace isocd_win {
 
         void SetControlState(bool enabled) {
             if(enabled) {
-                startBuildButton.Text = "Build ISO and save template";
+                startBuildButton.Text = BUILD_ISO_AND_SAVE_TEMPLATE_BUTTON;
             }
             else {
-                statusLabel.Text = "Scanning directories...";
-                startBuildButton.Text = "Abort";
+                statusLabel.Text = SCANNING_DIRECTORIES_STATUS_LABEL;
+                startBuildButton.Text = ABORT_BUTTON;
             }
 
             progressBar.Value = 0;
@@ -331,7 +291,6 @@ namespace isocd_win {
             }
             else {
                 progressBar.Value = e.State.Progress;
-                //statusLabel.Text = $"Processing entry {e.State.CurrentEntry} of {e.State.TotalEntries}";
             }
         }
 
@@ -339,10 +298,22 @@ namespace isocd_win {
             switch(e.Status) {
                 case WorkerCompletedStatus.Success:
                     statusLabel.ForeColor = Color.DarkGreen;
-                    statusLabel.Text = "Done!";
+                    statusLabel.Text = DONE_STATUS_LABEL;
 
                     if(configManager.Options.PlaySounds) {
                         successSound.Play();
+                    }
+
+                    if(configManager.Options.WinUAETest && configManager.Options.WinUAEPath.Contains("winuae") && configManager.Options.WinUAEPath.Contains(".exe") && configManager.Options.WinUAEConfigPath != "")
+                    {
+                        var psi = new ProcessStartInfo
+                        {
+                            FileName = configManager.Options.WinUAEPath,
+                            Arguments = "-G -config=" + configManager.Options.WinUAEConfigPath + " -cdimage=" + configManager.Options.OutputFile,
+                            UseShellExecute = false
+                        };
+
+                        Process.Start(psi);
                     }
 
                     break;
@@ -359,7 +330,7 @@ namespace isocd_win {
 
                 case WorkerCompletedStatus.Cancelled:
                     statusLabel.ForeColor = Color.Blue;
-                    statusLabel.Text = "Aborted!";
+                    statusLabel.Text = ABORTED_STATUS_LABEL;
                     break;
             }
 
@@ -374,7 +345,7 @@ namespace isocd_win {
                 var response = ShowWarning(COULD_NOT_FIND_TM_FILES);
 
                 if(response == DialogResult.Yes) {
-                    statusLabel.Text = "Downloading trademark files, please wait...";
+                    statusLabel.Text = DOWNLOADING_TRADEMARK_FILES_STATUS_LABEL;
                     builderSetupResult.HaveTmFiles = TmFileHelper.DownloadTmFiles();
                     statusLabel.Text = "";
                 }
@@ -445,8 +416,6 @@ namespace isocd_win {
             await worker.StartWorkAsync(configManager.Options);
 
             SetAppState(AppStates.Idle);
-
-            // generateOrderFileCheckBox.Tag = "Generate order file " + _options.InputFolder + @"\ISOCD_" + volumeIdTextBox.Text + ".txt";
         }
 
         private bool checkEnteredParameters()
@@ -469,12 +438,9 @@ namespace isocd_win {
                 return false;
             }
 
-            /*SetAppState(AppStates.BuildingIso);
-            UpdateConfigFromForm();*/
-
             if (!configManager.Options.IsValid())
             {
-                MessageBox.Show(configManager.Options.ValidationResult().Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                MessageBox.Show(configManager.Options.ValidationResult().Message, ERROR_MESSAGE_BOX, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                 return false;
             }
 
@@ -512,10 +478,6 @@ namespace isocd_win {
                 successSound.Load();
                 errorSound = new SoundPlayer(Resources.error);
                 errorSound.Load();
-
-                //worker = new BuildIsoWorker();
-                //worker.WorkerUpdateEvent += WorkerUpdate;
-                //worker.WorkerCompletedEvent += WorkerCompleted;
             }
             catch (Exception ex)
             {
