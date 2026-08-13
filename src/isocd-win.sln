@@ -16,6 +16,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "isocd-con", "isocd-con\isoc
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "isocd-builder.Tests", "isocd-builder.Tests\isocd-builder.Tests.csproj", "{1A32B088-65D5-49CA-A188-86984AC90707}"
 EndProject
+Project("{9A19103F-16F7-32BB-98BB-C0C4E3ADFC6D}") = "isocd-lib", "isocd-lib\isocd-lib.csproj", "{A45FDC0F-F478-42F9-993F-2095B6BE361C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		ActualRelease|Any CPU = ActualRelease|Any CPU
@@ -46,6 +48,12 @@ Global
 		{1A32B088-65D5-49CA-A188-86984AC90707}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1A32B088-65D5-49CA-A188-86984AC90707}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1A32B088-65D5-49CA-A188-86984AC90707}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A45FDC0F-F478-42F9-993F-2095B6BE361C}.ActualRelease|Any CPU.ActiveCfg = Release|Any CPU
+		{A45FDC0F-F478-42F9-993F-2095B6BE361C}.ActualRelease|Any CPU.Build.0 = Release|Any CPU
+		{A45FDC0F-F478-42F9-993F-2095B6BE361C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A45FDC0F-F478-42F9-993F-2095B6BE361C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A45FDC0F-F478-42F9-993F-2095B6BE361C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A45FDC0F-F478-42F9-993F-2095B6BE361C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

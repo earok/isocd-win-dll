@@ -22,3 +22,34 @@ ISOCD-Win is a C#/.NET Windows replacement for the native Amiga ISOCD applicatio
 * Building can be aborted mid-process if needed (multi-threaded)
 * Supports launching of WinUAE to test built ISO files before burning
 * The image building library is a self-contained assembly (DLL) and could easily be used in other .NET applications
+
+## Using ISOCD as a library
+
+`src/isocd-lib` packages the image builder as **IsoCd.Builder.dll**, a single .NET Standard 2.0
+assembly whose only external reference is `netstandard 2.0`. It has no NuGet dependencies and nothing
+to copy alongside it, so it can be referenced from .NET Framework 4.6.1+, .NET Core 2.0+, .NET 5-9,
+Mono, or dropped into a Unity project's `Assets/Plugins` folder.
+
+```
+dotnet build src/isocd-lib/isocd-lib.csproj -c Release
+```
+
+```csharp
+using IsoCd;
+
+var result = IsoCdBuilder.Build(new IsoBuildOptions {
+    InputFolder  = @"C:\MyGame\disc",
+    OutputFile   = @"C:\MyGame\build\MyGame.iso",
+    TargetSystem = IsoTargetSystem.CD32,
+    VolumeId     = "MY_GAME",
+    PadSize      = IsoPadSize.Cdr74
+}, progress => Console.WriteLine(progress));
+
+if(!result.Success) {
+    Console.Error.WriteLine(result.Message);
+}
+```
+
+Every option the GUI exposes is available, including trademark file injection for CD32 and CDTV
+booting. See [src/isocd-lib/README.md](src/isocd-lib/README.md) for the full API, the complete
+options reference, and notes on managing the trademark files offline.

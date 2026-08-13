@@ -1,0 +1,57 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!--
+    A dependency-free, redistributable build of the ISOCD image builder.
+
+    Targets .NET Standard 2.0 so the resulting DLL can be dropped into any
+    .NET Framework 4.6.1+, .NET Core / .NET 5+, Mono or Unity project without
+    bringing any NuGet packages along with it.
+
+    The ACTUAL_RELEASE define switches Iso9660 over to plain System.IO instead
+    of System.IO.Abstractions, which is what removes the last package
+    dependency (System.IO.Abstractions is only needed by the unit tests).
+  -->
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <AssemblyName>IsoCd.Builder</AssemblyName>
+    <RootNamespace>IsoCd</RootNamespace>
+    <DefineConstants>$(DefineConstants);ACTUAL_RELEASE</DefineConstants>
+
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
+    <EnableDefaultEmbeddedResourceItems>false</EnableDefaultEmbeddedResourceItems>
+    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <!-- The linked isocd-builder sources are not fully XML documented; don't fail on that. -->
+    <NoWarn>$(NoWarn);1591;1570</NoWarn>
+    <SignAssembly>false</SignAssembly>
+    <Deterministic>true</Deterministic>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <!-- Shared version/copyright attributes, kept in step with the other projects. -->
+    <Compile Include="..\shared\SharedAssemblyInfo.cs" Link="Properties\SharedAssemblyInfo.cs" />
+
+    <!-- The existing builder sources, compiled straight in so the DLL is self-contained. -->
+    <Compile Include="..\isocd-builder\**\*.cs"
+             Exclude="..\isocd-builder\bin\**\*.cs;..\isocd-builder\obj\**\*.cs;..\isocd-builder\Iso9660.new.cs;..\isocd-builder\Properties\AssemblyInfo.cs"
+             LinkBase="isocd-builder" />
+
+    <!-- This project's own sources. -->
+    <Compile Include="*.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <!--
+      Resources.Designer.cs looks the resources up by the literal name
+      "isocd_builder.Properties.Resources", so the logical name has to be pinned
+      here rather than derived from this project's root namespace.
+    -->
+    <EmbeddedResource Include="..\isocd-builder\Properties\Resources.resx"
+                      Link="Properties\Resources.resx"
+                      LogicalName="isocd_builder.Properties.Resources.resources" />
+  </ItemGroup>
+
+</Project>
